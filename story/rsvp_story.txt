@@ -1,0 +1,29 @@
+Story: minimalist RSVPs
+  As a guest with lots to do
+  I want to RSVP to an invite with a minimum of mouse clicks
+  So that I can get on with the rest of my tasks
+  
+  Scenario: email-free RSVPs
+    Given a link to a party
+    And a password
+    When I follow the link
+    And I enter the password
+    Then I should see the party details
+    When I enter my name
+    And I answer that I will attend
+    Then I should see my name in the list of partygoers
+
+  Scenario: email RSVPs
+    Given an email message about a party
+    Then I should see the date and time of the party
+    And I should see the location of the party
+    And I should see instructions on how to RSVP
+    When I reply with "No"
+    And I follow the link
+    Then I should see my name in the list of decliners
+  
+  Scenario: RSVP links from email
+    Given an email message about a party
+    Then I should see Yes/No/Maybe links
+    When I follow the "Maybe" link
+    Then I should see my name in the list of wafflers  

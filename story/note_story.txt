@@ -1,0 +1,16 @@
+Story: Editing text
+
+As a note-taker
+I want to use familiar editing shortcuts
+So that I can save time
+
+Scenario: Cut and paste
+  Given a new document
+  When I type "pineapple"
+  And I cut all the text
+  Then the text should be empty
+  
+  When I type "mango"
+  And I select all the text
+  And I paste the clipboard contents
+  Then the text should equal "pineapple"
