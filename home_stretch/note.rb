@@ -124,11 +124,13 @@ end
 # START:fixture
 require 'fileutils'
 
-def Note.fixture(name)
-  source = @@app.path_to(name + 'Fixture')
-  target = @@app.path_to(name)
+class Note
+  def Note.fixture(name)
+    source = @@app.path_to(name + 'Fixture')
+    target = @@app.path_to(name)
   
-  FileUtils.delete target if File.exist? target
-  FileUtils.copy source, target
+    FileUtils.delete target if File.exist? target
+    FileUtils.copy source, target
+  end
 end
 # END:fixture
