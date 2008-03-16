@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Drag and Drop</title>
+  <script src="javascripts/prototype.js" type="text/javascript"></script>
+  <script src="javascripts/scriptaculous.js?load=effects,dragdrop" type="text/javascript"></script>
+  <style type="text/css">
+    body {
+      font-family: "Frutiger", "Univers", "Helvetica Neue", arial, helvetica, sans-serif;
+    }
+
+    ul {
+      list-style-image: none;
+      list-style-type: none;
+      margin-left: 0px;
+      padding-left: 0px;
+    }
+  
+    ul li {
+      margin-bottom: 5px;
+    }
+
+    span.drag {
+      background-color: black;
+      color: white;
+      cursor: move;
+      padding: 1px;
+      font-size: small;
+    }
+  </style>
+</head>
+<body>
+  <h3>Jokes to use in the book</h3>
+   <p>
+     <a href="#" id="reorder" onclick="$$('.drag').invoke('toggle'); return false;">Reorder</a>
+   </p>
+   <ul class="sortabledemo" id="jokelist">
+     <li id="item_1">
+       <span class="drag" style="display: none;">DRAG</span>
+       The one about the guy who walks into a bar
+     </li>
+     <li id="item_2">
+       <span class="drag" style="display: none;">DRAG</span>
+			 The one about the doctor, lawyer, and programmer
+     </li>
+     <li id="item_3">
+       <span class="drag" style="display: none;">DRAG</span>
+			 The one about the people lined up to get into Heaven
+     </li>
+     <li id="item_4">
+       <span class="drag" style="display: none;">DRAG</span>
+       The one that's so funny I have to hire a separate typist for each word
+     </li>
+     <li id="item_5">
+       <span class="drag" style="display: none;">DRAG</span>
+       The really offensive one that's going to get me in a lot of trouble
+     </li>
+  </ul>
+
+  <script type="text/javascript">
+    // <![CDATA[
+    Sortable.create("jokelist",
+      {dropOnEmpty: true,
+       handle: 'drag',
+       containment: ["jokelist"],
+       constraint: false});
+    // ]]>
+  </script>
+</body>
+</html>
