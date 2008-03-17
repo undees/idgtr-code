@@ -14,7 +14,7 @@ end
 require 'Win32API' #<callout id="co.require_win32api"/>
 
 def user32(name, param_types, return_value) #<callout id="co.user32">
-  user32 name, param_types, return_value
+  Win32API.new 'user32', name, param_types, return_value
 end
 
 KEYEVENTF_KEYDOWN = 0 

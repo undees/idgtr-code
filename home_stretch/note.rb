@@ -129,7 +129,7 @@ class Note
     source = @@app.path_to(name + 'Fixture')
     target = @@app.path_to(name)
   
-    FileUtils.delete target if File.exist? target
+    FileUtils.rm target if File.exist? target
     FileUtils.copy source, target
   end
 end

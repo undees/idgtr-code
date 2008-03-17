@@ -184,12 +184,12 @@ module WindowsGui
       mouse_event MOUSEEVENTF_LEFTUP, 0, 0, 0, 0      
     end
     
-    def self.top_level(title, seconds=3, wnd_class = nil)
+    def self.top_level(title, seconds=10, wnd_class = nil)
       @handle = timeout(seconds) do
         loop do
           h = find_window wnd_class, title
           break h if h > 0
-          sleep 0.2
+          sleep 0.3
         end
       end
 

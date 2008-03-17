@@ -23,11 +23,11 @@ class LockNote < Note
   # END:atlres
       
   # START:initialize
-  def initialize(name = nil, with_options = {})
+  def initialize(name = 'LockNote', with_options = {})
     options = DefaultOptions.merge(with_options)
     
     @prompted = {}
-    @path = LockNote.path_to(name || 'LockNote')
+    @path = LockNote.path_to(name)
     
     system 'start "" "' + @path + '"'
     unlock_password options
