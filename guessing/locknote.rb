@@ -240,19 +240,19 @@ class LockNote
   @@actions = Set.new
   
   def self.def_action(name, options, way = nil)
+    @@actions << name
+
     define_method name do
       way ||= @@default_way
       
-      keys = options.keys.sort {|k| k.to_s}
+      keys = options.keys.sort_by {|k| k.to_s}
       key = case way
         when nil;     keys.last
         when :random; keys[rand(keys.size)]
         else          way
       end
 
-      action = options[way]
-
-      @@actions << name
+      action = options[key]
 
       case key
       when :menu
@@ -335,7 +335,6 @@ class LockNote
     random_text = (1..num).collect {rand(26) + ?a}.pack 'c*'
     type_in random_text
     $logger.info "Typing #{random_text}"
-    $logger.info "type_in '#{random_text}'"
   end
   
   def random_clicking
@@ -345,11 +344,28 @@ class LockNote
       (rand(2) + 1).times do
         point = @main_window.click(EditControl, :left, point || :random)
         $logger.info "Clicking #{point.inspect}"
-        $logger.info "@main_window.click EditControl, :left, " + point.inspect
       end
     end
   end
   
   @@actions << :random_typing << :random_clicking
   # END:typing_clicking
+
+  def random_typing
+    num = 1 + rand(50)
+    random_text = (1..num).collect {rand(26) + ?a}.pack 'c*'
+    type_in random_text
+    $logger.info "type_in '#{random_text}'"
+  end
+  
+  def random_clicking
+    num = 1 + rand(10)
+    num.times do
+      point = nil
+      (rand(2) + 1).times do
+        point = @main_window.click(EditControl, :left, point || :random)
+        $logger.info "@main_window.click EditControl, :left, " + point.inspect
+      end
+    end
+  end
 end
