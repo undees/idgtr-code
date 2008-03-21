@@ -80,8 +80,11 @@ class CalculatorTest
   # END:horror_vacui
 end
 
-# START:test_runner
-Test::Unit::UI::Console::TestRunner.run(CalculatorTest)
 
-Calculator.single.off
-# END:test_runner
+# START:calc_off
+class CalculatorOff < Test::Unit::TestCase
+  def test_off
+    Thread.new {sleep 3; Calculator.single.off}
+  end
+end
+# END:calc_off
