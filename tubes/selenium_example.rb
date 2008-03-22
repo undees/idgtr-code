@@ -18,7 +18,7 @@ browser.wait_for_page_to_load 5000
 
 
 # START:num_results
-num_results = browser.get_xpath_count('table[@id="bookshelf"]/tr').to_i
+num_results = browser.get_xpath_count('//table[@id="bookshelf"]//tr').to_i
 # END:num_results
 
 

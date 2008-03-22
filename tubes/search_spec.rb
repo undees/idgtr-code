@@ -7,12 +7,12 @@ class Symbol
   end
 end
 
-class Googler
+class BookSearch
   attr_reader :browser
 
   def initialize
     @browser = Selenium::SeleniumDriver.new \
-      'localhost', 4444, '*firefox', 'http://www.google.com', 10000
+      'localhost', 4444, '*firefox', 'http://www.pragprog.com', 10000
     @browser.start
   end
   
@@ -20,36 +20,61 @@ class Googler
     @browser.stop
   end
   
-  ResultTag = "/descendant::h2[@class='r']"
+  ResultCounter = '//table[@id="bookshelf"]//tr'
+  ResultReader = 'xpath=/descendant::td[@class="description"]'
   
   def find(term)
-    @browser.open 'http://www.google.com'
-    @browser.type 'name=q', term
-    @browser.click 'name=btnG'
+    @browser.open '/'
+    @browser.type  '//input[@id="q"]', 'Ruby'
+    @browser.click '//button[@class="go"]'
     @browser.wait_for_page_to_load 5000
     
-    count = @browser.get_xpath_count(ResultTag).to_i
-    puts count
-    
-    (1..count).collect do |i|
-      xpath = "xpath=#{ResultTag}[#{i}]"
-      [@browser.get_text(xpath),
-       @browser.get_attribute(xpath + '/a@href')]
+    num_results = @browser.get_xpath_count(ResultCounter).to_i
+    (1..num_results).inject({}) do |results, i|
+      title = @browser.get_text("#{ResultReader}[#{i}]/h4/a")
+      by = @browser.get_text("#{ResultReader}[#{i}]/p[@class='by-line']")
+      url = @browser.get_attribute("#{ResultReader}[#{i}]/h4/a@href")
+
+      title, subtitle = title.split ': '
+      authors = by.split(/by|and|,|with/).map(&:strip).reject(&:empty?)
+      
+      results.merge title => {
+        :title => title,
+        :subtitle => subtitle,
+        :url => url,
+        :authors => authors }
     end
   end
 end
 
 
-describe 'A search engine' do
+describe 'Searching for Ruby' do
+  predicate_matchers[:include] = :include?
+  
   before :all do
-    @googler = Googler.new
+    @search = BookSearch.new
+  end
+  
+  before :each do
+    @results = @search.find 'Ruby'
   end
   
   after :all do
-    @googler.shutdown
+    @search.shutdown
   end
   
-  it "should find what I'm looking for" do
-    @googler.find('rspec').map(&:last).should include('http://rspec.info/')
+  it 'should find the Pickaxe book' do
+    puts @results.inspect
+    book = @results['Programming Ruby']
+    book.should_not be_nil
+    book[:authors].should include('Dave Thomas')
+  end
+  
+  it 'should not find the Ajax book' do
+    @results.should_not have_key('Pragmatic Ajax')
+  end
+
+  it 'should fail (on purpose) to find Dilbert' do
+    @results.should have_key('Dilbert')
   end
 end
