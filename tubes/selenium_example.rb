@@ -24,12 +24,12 @@ num_results = browser.get_xpath_count('table[@id="bookshelf"]/tr').to_i
 
 # START:results
 (1..num_results).each do |n|
-  selector = "xpath=/descendant::td[@class='description'][#{n}]/h4/a" #<callout id="co.result_n"/>
-  title = browser.get_text(selector)
-  link = browser.get_attribute(selector + '@href') #<callout id="co.result_href"/>
+  hyperlink = "xpath=/descendant::td[@class='description'][#{n}]/h4/a" #<callout id="co.result_n"/>
+  title = browser.get_text(hyperlink)
+  url   = browser.get_attribute(hyperlink + '@href') #<callout id="co.result_href"/>
   
   puts 'Title: ' + title
-  puts 'Link:  ' + link
+  puts 'Link:  ' + url
   puts
 end
 # END:results
