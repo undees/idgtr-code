@@ -14,7 +14,7 @@ class BookSearch
     @browser = Watir::IE.new
   end
   
-  def shutdown
+  def close
     @browser.close
   end
 end

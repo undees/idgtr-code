@@ -18,7 +18,7 @@ class BookSearch
     @browser.start
   end
   
-  def shutdown
+  def close
     @browser.stop
   end
 end

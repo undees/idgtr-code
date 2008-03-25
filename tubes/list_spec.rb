@@ -9,9 +9,21 @@ describe JokeList do
     @list.close
   end
 
-  it 'lets me reorder by dragging' do
-    @list.position('joke_1').should == 1
-    @list.drag_to('joke_1', 'joke_4')
-    @list.position('joke_1').should == 4
+  it 'lets me drag an item to the end' do
+    @list.position('doctor').should == 2
+    @list.move 2, 5
+    @list.position('doctor').should == 5
+  end
+  
+  it 'lets me drag multiple items to sort' do
+    original = @list.items
+    
+    original.length.downto(1) do |last_pos|
+      subset = @list.items[0..last_pos - 1]
+      max_pos = subset.index(subset.max) + 1
+      @list.move max_pos, last_pos
+    end
+    
+    @list.items.should == original.sort
   end
 end

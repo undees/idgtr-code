@@ -7,7 +7,7 @@ describe 'Searching for Ruby' do
   end
   
   after do
-    @search.shutdown
+    @search.close
   end
   
   it 'should find the Pickaxe book' do
