@@ -1,15 +1,13 @@
-# http://extensions.rubyforge.org/rdoc/index.html
-
-# BEGIN:to_proc
+# START:to_proc
 class Symbol
   def to_proc
-    Proc.new { |*args| args.shift.__send__(self, *args) } #<callout id="co.to_proc"/>
+    Proc.new { |*args| args.shift.__send__(self, *args) }
   end
 end
 # END:to_proc
 
 
-# BEGIN:book_search
+# START:book_search
 require 'rubygems'
 require 'selenium'
 
@@ -27,7 +25,7 @@ end
 # END:book_search
 
 
-# BEGIN:find  
+# START:find  
 class BookSearch
   ResultCounter = '//table[@id="bookshelf"]//tr'  #<callout id="co.xpath_const"/>
   ResultReader = 'xpath=/descendant::td[@class="description"]'
@@ -41,18 +39,20 @@ class BookSearch
     num_results = @browser.get_xpath_count(ResultCounter).to_i
 
     (1..num_results).inject({}) do |results, i|
-      title = @browser.get_text("#{ResultReader}[#{i}]/h4/a")
+      title = @browser.get_text("#{ResultReader}[#{i}]/h4/a") #<callout id="co.use_xpath_const"/>
       by    = @browser.get_text("#{ResultReader}[#{i}]/p[@class='by-line']")
       url   = @browser.get_attribute("#{ResultReader}[#{i}]/h4/a@href")
 
       title, subtitle = title.split ': '
       authors = by.split(/by|and|,|with/).map(&:strip).reject(&:empty?) #<callout id="co.use_to_proc"/>
       
-      results.merge title => {
+      results.merge title =>
+      {
         :title => title,
         :subtitle => subtitle,
         :url => url,
-        :authors => authors }
+        :authors => authors
+      }
     end
   end
 end
