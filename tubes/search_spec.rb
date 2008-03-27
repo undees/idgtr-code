@@ -22,7 +22,7 @@ describe 'Searching for Ruby' do
     @results.should_not have_key('Pragmatic Ajax')
   end
 
-  it 'should fail (on purpose) to find Dilbert' do
-    @results.should have_key('Dilbert')
+  it 'should fail (on purpose) to find Gilgamesh' do
+    @results.should have_key('Gilgamesh')
   end
 end

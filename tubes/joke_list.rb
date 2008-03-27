@@ -1,3 +1,4 @@
+# START:joke_list
 require 'rubygems'
 require 'selenium'
 
@@ -13,7 +14,12 @@ class JokeList
   def close
     @browser.stop
   end
+end
+# END:joke_list
 
+
+# START:move
+class JokeList
   Reorder = '//a[@id="reorder"]'
   Draggable = 'selenium.browserbot.findElement("css=.drag").visible()'
   
@@ -26,13 +32,23 @@ class JokeList
     @browser.drag_and_drop_to_object from, to
     @browser.click Reorder
   end
-  
+# END:move
+
+
+# START:position
+class JokeList
   def position(item)
     @browser.get_element_index(item).to_i + 1
   end
+end
+# END:position
   
+
+# START:items
+class JokeList
   def items
     num_items = @browser.get_xpath_count('//li').to_i
     (1..num_items).map {|i| @browser.get_text "//li[#{i}]/span[2]"}
   end
 end
+# END:items

@@ -1,12 +1,3 @@
-# START:to_proc
-class Symbol
-  def to_proc
-    Proc.new { |*args| args.shift.__send__(self, *args) }
-  end
-end
-# END:to_proc
-
-
 # START:book_search
 require 'rubygems'
 require 'selenium'
@@ -39,12 +30,12 @@ class BookSearch
     num_results = @browser.get_xpath_count(ResultCounter).to_i
 
     (1..num_results).inject({}) do |results, i|
-      title = @browser.get_text("#{ResultReader}[#{i}]/h4/a") #<callout id="co.use_xpath_const"/>
-      by    = @browser.get_text("#{ResultReader}[#{i}]/p[@class='by-line']")
-      url   = @browser.get_attribute("#{ResultReader}[#{i}]/h4/a@href")
+      full_title = @browser.get_text("#{ResultReader}[#{i}]/h4/a") #<callout id="co.use_xpath_const"/>
+      byline = @browser.get_text("#{ResultReader}[#{i}]/p[@class='by-line']")
+      url = @browser.get_attribute("#{ResultReader}[#{i}]/h4/a@href")
 
-      title, subtitle = title.split ': '
-      authors = by.split(/by|and|,|with/).map(&:strip).reject(&:empty?) #<callout id="co.use_to_proc"/>
+      title, subtitle = full_title.split ': '
+      authors = authors_from byline #<callout id="co.author"/>
       
       results.merge title =>
       {
@@ -57,3 +48,12 @@ class BookSearch
   end
 end
 # END:find
+
+
+# START:author
+class BookSearch
+  def authors_from(byline)
+    byline[3..-1].gsub(/(,? and )|(,? with )/, ',').split(',')
+  end
+end
+# END:author

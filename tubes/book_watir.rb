@@ -1,10 +1,3 @@
-class Symbol
-  def to_proc
-    Proc.new { |*args| args.shift.__send__(self, *args) }
-  end
-end
-
-
 # BEGIN:book_search
 require 'rubygems'
 require 'watir'
@@ -34,12 +27,12 @@ class BookSearch
     (1..num_results).inject({}) do |results, i|
       book = bookshelf[i][2]
 
-      title = book.h4(:index, 1).text
-      by    = book.p(:class, 'by-line').text
-      url   = book.link(:index, 1).href
+      full_title = book.h4(:index, 1).text
+      byline     = book.p(:class, 'by-line').text
+      url        = book.link(:index, 1).href
 
-      title, subtitle = title.split ': '
-      authors = by.split(/by|and|,|with/).map(&:strip).reject(&:empty?)
+      title, subtitle = full_title.split ': '
+      authors = authors_from byline
       
       results.merge title => {
         :title => title,
@@ -50,3 +43,10 @@ class BookSearch
   end
 end
 # END:find
+
+
+class BookSearch
+  def authors_from(byline)
+    byline[3..-1].gsub(/(,? and )|(,? with )/, ',').split(',')
+  end
+end

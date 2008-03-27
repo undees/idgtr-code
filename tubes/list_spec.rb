@@ -9,12 +9,15 @@ describe JokeList do
     @list.close
   end
 
+  # START:simple
   it 'lets me drag an item to the end' do
     @list.position('doctor').should == 2
     @list.move 2, 5
     @list.position('doctor').should == 5
   end
+  # END:simple
   
+  # START:sort
   it 'lets me drag multiple items to sort' do
     original = @list.items
     
@@ -26,4 +29,5 @@ describe JokeList do
     
     @list.items.should == original.sort
   end
+  # END:sort
 end
