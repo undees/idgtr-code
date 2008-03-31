@@ -21,27 +21,32 @@ end
 # START:move
 class JokeList
   Reorder = '//a[@id="reorder"]'
-  Draggable = 'selenium.browserbot.findElement("css=.drag").visible()'
-  
-  def move(from_pos, to_pos)
-    from = "//li[#{from_pos}]/span[@class='drag']"
-    to   = "//li[#{to_pos}]/span[@class='drag']"
-    
+  Draggable = 'selenium.browserbot.findElement("css=.drag").visible()' #<callout id="co.browserbot"/>
+  Locked = '!' + Draggable
+
+  def move(from_order, to_order)
+    from_element = "//li[#{from_order}]/span[@class='drag']"
+    to_element   = "//li[#{to_order}]/span[@class='drag']"
+
     @browser.click Reorder
-    @browser.wait_for_condition Draggable, 1000
-    @browser.drag_and_drop_to_object from, to
+    @browser.wait_for_condition Draggable, 2000 #<callout id="co.draggable"/>
+
+    @browser.drag_and_drop_to_object from_element, to_element
+
     @browser.click Reorder
+    @browser.wait_for_condition Locked, 2000    #<callout id="co.locked"/>
   end
+end
 # END:move
 
 
-# START:position
+# START:order
 class JokeList
-  def position(item)
+  def order(item)
     @browser.get_element_index(item).to_i + 1
   end
 end
-# END:position
+# END:order
   
 
 # START:items

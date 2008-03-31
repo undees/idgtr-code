@@ -1,12 +1,12 @@
 describe 'Searching for Ruby' do
   predicate_matchers[:include] = :include? #<callout id="co.predicate_matchers"/>
   
-  before do
+  before :all do
     @search = BookSearch.new
     @results = @search.find 'Ruby'
   end
   
-  after do
+  after :all do
     @search.close
   end
   
@@ -23,6 +23,6 @@ describe 'Searching for Ruby' do
   end
 
   it 'should fail (on purpose) to find Gilgamesh' do
-    @results.should have_key('Gilgamesh')
+    @results.should have_key('Gilgamesh') #<callout id="co.fail_on_purpose"/>
   end
 end
