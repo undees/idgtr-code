@@ -23,13 +23,36 @@ num_results = browser.get_xpath_count('//table[@id="bookshelf"]//tr').to_i
 
 
 # START:results
-(1..num_results).each do |n|
-  hyperlink = "xpath=/descendant::td[@class='description'][#{n}]/h4/a" #<callout id="co.result_n"/>
-  title = browser.get_text(hyperlink)
-  url   = browser.get_attribute(hyperlink + '@href') #<callout id="co.result_href"/>
+results = (1..num_results).map do |n|
+  element  = "xpath=/descendant::td[@class='description'][#{n}]/h4/a" #<callout id="co.result_n"/>
+  title    = browser.get_text(element)
+  url      = browser.get_attribute(element + '@href') #<callout id="co.result_href"/>
   
-  puts 'Title: ' + title
-  puts 'Link:  ' + url
+  {:title => title, :url => url, :element => element}
+end
+
+results.each do |r|  
+  puts 'Title: ' + r[:title]
+  puts 'Link:  ' + r[:url]
   puts
 end
 # END:results
+
+
+# START:details
+pickaxe = results.find {|r| r[:title].include? 'Programming Ruby 3'}
+browser.click pickaxe[:element]
+browser.wait_for_page_to_load 5000
+# END:details
+
+
+# The next part will fail unless we change
+# the browser type above to '*chrome'.
+
+# START:purchase
+browser.click '//button[@class="add-to-cart"]'
+browser.wait_for_page_to_load 5000
+
+browser.open 'https://secure.pragprog.com/login'
+browser.wait_for_page_to_load 5000
+# END:purchase
