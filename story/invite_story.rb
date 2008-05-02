@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'spec/story'
-require 'selenium'
 require 'chronic'
 require 'party'
 

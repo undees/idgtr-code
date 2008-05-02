@@ -14,7 +14,7 @@ Edit view.
 
 RESTful with to_param
 
-
+Make sure date/time updates!!!!
 
 Scenario: email invites
   Given a blank invitation

@@ -1,3 +1,4 @@
+# START:first_step
 require 'rubygems'
 require 'spec/story'
 
@@ -5,7 +6,11 @@ steps_for :editing_text do
   Given 'a new document' do
     @note = Note.open
   end
+end
+# END:first_step
 
+
+steps_for :editing_text do
   When 'I type "$something"' do |something|
     @note.text = something
   end  
@@ -30,12 +35,8 @@ steps_for :editing_text do
     @note.should be_running
   end
 
-  Then 'the text should equal "$something"' do |something|
+  Then 'the text should be "$something"' do |something|
     @note.text.should == something
-  end
-
-  Then 'the text should contain "$something"' do |something|
-    @note.text.should include(something)
   end
 
   Then 'I exit the app' do
