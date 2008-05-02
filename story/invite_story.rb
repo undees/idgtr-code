@@ -2,39 +2,25 @@ require 'rubygems'
 require 'spec/story'
 require 'selenium'
 require 'chronic'
-require 'time'
+require 'party'
 
 steps_for :invite do
   Given 'a blank invitation' do
-    @subitted = false
-    @browser = Selenium::SeleniumDriver.new \
-      'localhost', 4444, '*firefox', 'http://localhost:3000', 10000
-
-    class << @browser
-      def click_and_wait(link, ms = 5000)
-        click link
-        wait_for_page_to_load ms
-      end
-    end
-
-    @browser.start
-    @browser.open '/parties/new'
+    @party = Party.new
   end
   
   When 'I plan a party called "$n"' do |name|
-    @browser.type 'id=party_name', name    
+    @party.name = name
+    @party.save
   end
   
   Then 'I should see the Web address to send to my friends' do
-    @submitted ||= @browser.click_and_wait 'id=party_submit'
-    @browser.get_text('id=party_link').should match(%r(^http://))
+    @party.should have_link
   end
 
   Then 'the party should $a on $dt' do |action, datetime|
-    @submitted ||= @browser.click_and_wait 'id=party_submit'
-
-    id = "party_#{action}s_at"
-    actual_time = Time.parse @browser.get_text("id=#{id}")
+    from, to = @party.time
+    actual_time = (action == 'begin') ? from : to
     expected_time = Chronic.parse(datetime)
     
     actual_time.should == expected_time
