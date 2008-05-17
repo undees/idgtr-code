@@ -1,29 +1,36 @@
-# START:first_step
+# START:app_state
 require 'rubygems'
 require 'spec/story'
 
-steps_for :editing_text do
+steps_for :app_state do #<callout id="co.steps_for"/>
   Given 'a new document' do
     @note = Note.open
   end
-end
-# END:first_step
 
-
-steps_for :editing_text do
-  When 'I type "$something"' do |something|
-    @note.text = something
-  end  
-
-  When 'I save the document as "$name" with password "$password"' do |name, password|
-    @note.save_as name, :password => password
-  end
-  
   When 'I exit the app' do
     @note.exit!
   end
 
-  When 'I open the document "$name" with password "$password"' do |name, password|
+  Then 'the app should be running' do
+    @note.should be_running
+  end
+end
+# END:app_state
+
+
+# START:documents
+steps_for :documents do
+  When 'I type "$something"' do |something|
+    @note.text = something
+  end  
+
+  When 'I save the document as "$name" with password "$password"' do  #<callout id="co.when_parameter"/>
+    |name, password|
+    @note.save_as name, :password => password
+  end
+  
+  When 'I open the document "$name" with password "$password"' do
+    |name, password|
     @note = Note.open name, :password => password
   end
 
@@ -31,21 +38,15 @@ steps_for :editing_text do
     @note.change_password :old_password => old, :password => password
   end
 
-  Then 'the app should be running' do
-    @note.should be_running
-  end
-
   Then 'the text should be "$something"' do |something|
     @note.text.should == something
   end
-
-  Then 'I exit the app' do
-    @note.exit!
-  end
 end
+# END:documents
+
 
 # START:with_steps_for
-with_steps_for :editing_text do
+with_steps_for :app_state, :documents do
   run 'password_story.txt'
 end
 # END:with_steps_for

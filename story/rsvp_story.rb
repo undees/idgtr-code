@@ -3,20 +3,12 @@ require 'spec/story'
 require 'chronic'
 require 'party'
 
-class Web
+class WebRunner
   attr_reader :browser
   
   def initialize
     @browser = Selenium::SeleniumDriver.new \
       'localhost', 4444, '*firefox', 'http://localhost:3000', 10000
-
-    class << @browser
-      def click_and_wait(link, ms = 5000)
-        click link
-        wait_for_page_to_load ms
-      end
-    end
-    
     @browser.start
   end
   

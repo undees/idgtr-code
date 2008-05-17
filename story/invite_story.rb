@@ -4,13 +4,13 @@ require 'chronic'
 require 'party'
 
 steps_for :invite do
-  Given 'a blank invitation' do
+  Given 'a party called "$n"' do |name|
     @party = Party.new
+    @party.name = name
   end
   
-  When 'I plan a party called "$n"' do |name|
-    @party.name = name
-    @party.save
+  When 'I view the invitation' do
+    @party.view
   end
   
   Then 'I should see the Web address to send to my friends' do

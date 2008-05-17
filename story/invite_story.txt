@@ -4,8 +4,7 @@ Story: minimalist invites
   So that I can get on with the rest of my tasks
   
   Scenario: email-free invites
-    Given a blank invitation
-    When I plan a party called "Party at Joe's house"
+    Given a party called "Party at Joe's house"
     Then I should see the Web address to send to my friends
     And the party should begin on Saturday at 10 PM
     And the party should end on Sunday at 2 AM

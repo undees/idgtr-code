@@ -3,31 +3,54 @@ require 'selenium'
 require 'time'
 
 class Party
-  def initialize(browser)
-    @browser = browser
+  def initialize
+    @browser = Selenium::SeleniumDriver.new \
+      'localhost', 4444, '*firefox', 'http://localhost:3000', 10000
+    @browser.start
     @browser.open '/parties/new'
+  end
+  
+  def close
+    @browser.stop
   end
   
   def name=(name)
     @browser.type 'id=party_name', name    
   end
   
-  def save
-    @browser.click_and_wait 'id=party_submit'    
+  def view
+    ensure_saved
+    @browser.open link
+  end
+  
+  def ensure_saved
+    unless @saved
+      @browser.click 'id=party_submit'
+      @browser.wait_for_page_to_load 5000
+      @saved = true
+    end
   end
   
   def link
+    ensure_saved
     @browser.get_text('id=party_link')
   end
   
   def has_link?
+    ensure_saved
     link =~ %r(^http://)
   end
   
   def time
-    ['party_begins_at', 'party_ends_at'].map do |id|
-      Time.parse @browser.get_text("id=#{id}")
-    end
+    begins_on = @browser.get_text 'party_begins_on'
+    begins_at = @browser.get_text 'party_begins_at'
+    ends_at = @browser.get_text 'party_ends_at'
+    
+    begins = Time.parse(begins_on + ' ' + begins_at)
+    ends = Time.parse(begins_on + ' ' + ends_at)
+    ends += 86400 if ends < begins
+    
+    [begins, ends]
   end
   
   RsvpItem = '//ul[@id="guests"]/li'
