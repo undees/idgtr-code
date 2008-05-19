@@ -1,25 +1,24 @@
-require 'applescript'
+require 'rubygems'
+require 'appscript'
 
-include AppleScript
+include Appscript
 
-tell.application("TextEdit").activate!
+app("TextEdit").activate
 
-tell.application("System Events").
-  process("TextEdit").
-  menu_bar(1).
-  menu_bar_item("Edit").
-  menu("Edit") do
-    keystroke! "H"
-    keystroke! "i"
-    click_menu_item! "Select All"
-    click_menu_item! "Copy"
-		key_code! 124
-		click_menu_item! "Paste"
-  end
-  
-  # app('System Events').
-  #   processes['TextEdit'].
-  #   menu_bars[1].
-  #   menu_bar_items['Edit'].
-  #   menus['Edit'].
-  #   menu_items['Select All'].click
+events = app("System Events")
+events.keystroke "H"
+events.keystroke "i"
+
+edit = app('System Events').
+  processes['TextEdit'].
+  menu_bars[1].
+  menu_bar_items['Edit'].
+  menus['Edit']
+
+edit.menu_items['Select All'].click
+edit.menu_items['Copy'].click
+
+RightArrow = 124
+events.key_code RightArrow
+
+edit.menu_items['Paste'].click

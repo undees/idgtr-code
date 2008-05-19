@@ -1,47 +1,61 @@
+# START:party_settings
 require 'rubygems'
 require 'selenium'
 require 'time'
 
 class Party
-  def initialize
-    @browser = Selenium::SeleniumDriver.new \
-      'localhost', 4444, '*firefox', 'http://localhost:3000', 10000
-    @browser.start
+  def initialize(browser)
+    @browser = browser
     @browser.open '/parties/new'
   end
-  
-  def close
-    @browser.stop
-  end
-  
-  def name=(name)
-    @browser.type 'id=party_name', name    
-  end
-  
-  def view
-    ensure_saved
-    @browser.open link
-  end
-  
-  def ensure_saved
-    unless @saved
-      @browser.click 'id=party_submit'
-      @browser.wait_for_page_to_load 5000
-      @saved = true
+
+  def Party.def_setting(setting, type = :read_write)
+    if type == :readable || type == :read_write
+      define_method(setting) do
+        @browser.get_text("id=party_#{setting}")
+      end
+    end
+    
+    if type == :writable || type == :read_write
+      define_method(setting.to_s + '=') do |value|
+        @browser.type "id=party_#{setting}", value
+      end
     end
   end
-  
-  def link
-    ensure_saved
-    @browser.get_text('id=party_link')
+
+  def_setting :name
+  def_setting :description
+  def_setting :location
+  def_setting :link, :readable
+  def_setting :notice, :readable
+  def_setting :recipients, :writable
+end
+# END:party_settings
+
+
+# START:party_set_time
+class Party  
+  def begins_at=(time); set_time(:begin, time) end
+  def ends_at=  (time); set_time(:end, time) end
+
+  def set_time(event, time)
+    ['%Y', '%B', '%d', '%H', '%M'].each_with_index do |part, index|
+      element = "id=party_#{event}s_at_#{index + 1}i"
+      value = time.strftime part
+      
+      @browser.select element, value
+    end
   end
-  
-  def has_link?
-    ensure_saved
-    link =~ %r(^http://)
-  end
-  
-  def time
+end
+# END:party_set_time
+
+
+# START:party_get_time
+class Party  
+  def begins_at; get_times.first end
+  def ends_at; get_times.last end
+
+  def get_times
     begins_on = @browser.get_text 'party_begins_on'
     begins_at = @browser.get_text 'party_begins_at'
     ends_at = @browser.get_text 'party_ends_at'
@@ -52,41 +66,69 @@ class Party
     
     [begins, ends]
   end
-  
+end
+# END:party_get_time
+
+
+# START:party_save
+class Party
+  def save_and_view
+    @browser.click 'id=party_submit'
+    @browser.wait_for_page_to_load 5000
+    @saved = true
+  end
+end
+# END:party_save
+
+
+# START:rsvp
+class Party
+  def rsvp(name, attending)
+    @browser.type 'guest_name', name
+    @browser.click 'guest_attending' unless attending
+    @browser.click 'rsvp'
+    @browser.wait_for_page_to_load 5000
+  end
+end
+# END:rsvp
+
+
+# START:responses
+class Party
   RsvpItem = '//ul[@id="guests"]/li'
   
-  def guests
+  def responses(want_attending)
     num_guests = @browser.get_xpath_count(RsvpItem).to_i
-    puts
-    puts num_guests
-    (1..num_guests).map do |i|
-      puts i
-      puts @browser.get_text("#{RsvpItem}[#{i}]/span[@class='rsvp_name']")
-      @browser.get_text "#{RsvpItem}[#{i}]/span[@class='rsvp_name']"
+    return [] unless num_guests >= 1
+
+    all = (1..num_guests).map do |i|
+      name = @browser.get_text \
+        "#{RsvpItem}[#{i}]/span[@class='rsvp_name']"
+      rsvp = @browser.get_text \
+        "#{RsvpItem}[#{i}]/span[@class='rsvp_attending']"
+      [name, rsvp]
     end
+    
+    matching = all.select do |name, rsvp|
+      is_attending = !rsvp.include?('not')
+      !(want_attending ^ is_attending)
+    end
+    
+    matching.map {|name, rsvp| name}
   end
 end
+# END:responses
 
 
-class Rsvp
-  def initialize(browser, link)
-    @browser = browser
-    @link = link
-    @browser.open @link
+# START:party_email
+class Party
+  def email_to(address)
+    @browser.open link + '.txt?email=' + address
+    @browser.get_body_text
   end
-  
-  def details
-    fields = %w(name description location begins_at ends_at)
-    fields.each do |f|
-      @browser.get_text "party_#{f}"
-    end
-  end
-  
-  def name=(name)
-    @browser.type 'guest_name', name
-  end
-  
-  def attending=(attending)
-    @browser.click_and_wait 'rsvp'
+
+  def rsvp_at(rsvp_link)
+    @browser.open rsvp_link
   end
 end
+# END:party_email

@@ -3,8 +3,17 @@ Story: minimalist invites
   I want to plan a party with a minimum of mouse clicks
   So that I can get on with the rest of my tasks
   
-  Scenario: email-free invites
-    Given a party called "Party at Joe's house"
+  Scenario: manual invites
+    Given a party called "Celebration"
+    And a description of "There's a party goin' on"
+    And a location of "Right here"
+    And a starting time of September 29, 2010 at 12:30 PM
+    And an ending time of September 29, 2010 at 12:35 PM
+
+    When I view the invitation
     Then I should see the Web address to send to my friends
-    And the party should begin on Saturday at 10 PM
-    And the party should end on Sunday at 2 AM
+    And the name should be "Celebration"
+    And the description should be "There's a party goin' on"
+    And the location should be "Right here"
+    And the party should begin on September 29, 2010 at 12:30 PM
+    And the party should end on September 29, 2010 at 12:35 PM
