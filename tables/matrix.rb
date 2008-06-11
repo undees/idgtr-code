@@ -9,6 +9,7 @@ require 'spec'
 Test::Unit::TestCase.extend FunctionalTestMatrix
 # END:require_zentest
 
+
 # START:test_class
 require 'calculator'
 
@@ -20,8 +21,9 @@ class CalculatorTest < Test::Unit::TestCase
 end
 # END:test_class
 
+
+# START:matrix_methods
 class CalculatorTest
-  # START:matrix_methods
   Constants = {:huge => 2**63 - 2, :huge_1 => 2**63 - 1, :over => 0}
 
   def number_for(value) #<callout id="co.number_for"/>
@@ -44,9 +46,12 @@ class CalculatorTest
   def matrix_test(expected)
     @calc.total_seconds.should == number_for(expected)
   end
-  # END:matrix_methods
+end
+# END:matrix_methods
 
-  # START:method_missing
+
+# START:method_missing
+class CalculatorTest
   alias_method :old_method_missing, :method_missing
   
   def method_missing(name, *args)
@@ -59,17 +64,23 @@ class CalculatorTest
       old_method_missing name, *args
     end
   end
-  # END:method_missing
+end
+# END:method_missing
+
   
-  # START:matrix
+# START:matrix
+class CalculatorTest
   matrix :addition, :to_0,   :to_1,    :to_2, :to_huge
   action :add_0,     0,      1,        2,     :huge
   action :add_1,     1,      2,        3,     :huge_1
   action :add_2,     2,      3,        4,     :over
   action :add_huge,  :huge,  :huge_1,  :over, :over
-  # END:matrix
+end
+# END:matrix
 
-  # START:horror_vacui
+
+# START:horror_vacui
+class CalculatorTest
   _ = :na
 
   matrix :addition, :to_0,   :to_1,    :to_2, :to_huge
@@ -77,8 +88,8 @@ class CalculatorTest
   action :add_1,     1,      2,        _,     _
   action :add_2,     2,      3,        4,     _
   action :add_huge,  :huge,  :huge_1,  :over, :over
-  # END:horror_vacui
 end
+# END:horror_vacui
 
 
 # START:calc_off

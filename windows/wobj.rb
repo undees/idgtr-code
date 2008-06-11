@@ -1,6 +1,3 @@
-$: << './wet/src'
-
-# START:body
 require 'wet-winobj'
 require 'winobjects/WinLabel'
 require 'winobjects/WinCheckbox'
@@ -18,4 +15,3 @@ e = w.child_objects.first
 e.set 'This is some text'
 e.set 'And this is its replacement'
 puts e.text
-# END:body

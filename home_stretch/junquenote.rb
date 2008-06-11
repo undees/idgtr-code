@@ -100,7 +100,7 @@ class JunqueNote < Note
     @edit_window.select_all
   end
   
-  def JunqueNote.path_to(name)
+  def self.path_to(name)
     name + '.junque'
   end
 

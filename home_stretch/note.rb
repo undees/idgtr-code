@@ -4,7 +4,7 @@ class Note
   @@app = nil
   @@titles = {}
   
-  def Note.open(*args)
+  def self.open(*args)
     @@app.new *args
   end
     
@@ -125,7 +125,7 @@ end
 require 'fileutils'
 
 class Note
-  def Note.fixture(name)
+  def self.fixture(name)
     source = @@app.path_to(name + 'Fixture')
     target = @@app.path_to(name)
   

@@ -17,7 +17,7 @@ end
 # START:formatter
 class HtmlCapture < Spec::Runner::Formatter::HtmlFormatter
   def extra_failure_content(failure)
-    img = %Q(<img src="#{current_example_number}.png"
+    img = %Q(<img src="#{example_number}.png"
                   alt="" width="25%" height="25%" />)
     super(failure) + img
   end

@@ -3,7 +3,7 @@ class Note
   @@app = nil   #<callout id="co.attribute"/>
   @@titles = {} #<callout id="co.titles"/>
     
-  def Note.open
+  def self.open
     @@app.new
   end
 end

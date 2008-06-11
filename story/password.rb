@@ -34,7 +34,8 @@ steps_for :documents do
     @note = Note.open name, :password => password
   end
 
-  When 'I change the password from "$old" to "$password"' do |old, password|
+  When 'I change the password from "$old" to "$password"' do
+    |old, password|
     @note.change_password :old_password => old, :password => password
   end
 
@@ -47,6 +48,6 @@ end
 
 # START:with_steps_for
 with_steps_for :app_state, :documents do
-  run 'password_story.txt'
+  run 'password.story'
 end
 # END:with_steps_for

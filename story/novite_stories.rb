@@ -4,28 +4,33 @@ require 'spec/story'
 require 'chronic'
 require 'party'
 
-$browser = Selenium::SeleniumDriver.new \
-  'localhost', 4444, '*firefox', 'http://localhost:3000', 10000
-$browser.start
+class Listener
+  attr_reader :browser
+  
+  def run_started(num_scenarios)
+    @browser = Selenium::SeleniumDriver.new \
+      'localhost', 4444, '*firefox', 'http://localhost:3000', 10000
+    @browser.start
+  end
 
-class << $browser
-  def run_ended #<callout id="co.run_ended"/>
-    stop
+  def run_ended
+    @browser.stop
   end
   
   def method_missing(name, *args, &block)
-    # This space intentionally left blank.
+    # We don't care about the rest of the Story Runner events.
   end
 end
 
-Spec::Story::Runner.register_listener($browser)  #<callout id="co.register_listener"/>
+listener = Listener.new
+Spec::Story::Runner.register_listener(listener)
 # END:browser
 
 
 # START:planning
 steps_for :planning do
   Given 'a party called "$name"' do |name|
-    @party = Party.new($browser)
+    @party = Party.new(listener.browser)
     @party.name = name
   end
 
@@ -83,13 +88,10 @@ end
 # START:rsvp
 steps_for :rsvp do
   Then 'I should see the party details' do
-    # Any of these will throw an exception
-    # if novite fails to show the relevant detail.
-    @party.name
-    @party.description
-    @party.location
-    @party.begins_at
-    @party.ends_at
+    @party.should have_name
+    @party.should have_description
+    @party.should have_location
+    @party.should have_times
   end
   
   When /I answer that "$guest" will( not)? attend/ do |guest, answer|
@@ -99,7 +101,7 @@ steps_for :rsvp do
 
   Then 'I should see "$guest" in the list of $type' do |guest, type|
     want_attending = (type == 'partygoers')
-    @party.responses(want_attending).include?(guest).should be_true
+    @party.responses(want_attending).should include(guest)
   end
 end
 # END:rsvp
@@ -134,13 +136,13 @@ end
 
 # START:with_steps_for
 with_steps_for :planning, :reviewing do
-  run 'invite_story.txt'
+  run 'invite.story'
 end
 # END:with_steps_for
 
 
 # START:with_steps_for_rsvp
 with_steps_for :planning, :reviewing, :rsvp, :email do
-  run 'rsvp_story.txt'
+  run 'rsvp.story'
 end
 # END:with_steps_for_rsvp

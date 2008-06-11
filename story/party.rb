@@ -9,15 +9,19 @@ class Party
     @browser.open '/parties/new'
   end
 
-  def Party.def_setting(setting, type = :read_write)
+  def self.def_setting(setting, type = :read_write)
     if type == :readable || type == :read_write
       define_method(setting) do
         @browser.get_text("id=party_#{setting}")
       end
+      
+      define_method("has_#{setting}?") do
+        send(setting) rescue nil
+      end
     end
     
     if type == :writable || type == :read_write
-      define_method(setting.to_s + '=') do |value|
+      define_method("#{setting}=") do |value|
         @browser.type "id=party_#{setting}", value
       end
     end
@@ -65,6 +69,10 @@ class Party
     ends += 86400 if ends < begins
     
     [begins, ends]
+  end
+  
+  def has_times?
+    get_times rescue nil
   end
 end
 # END:party_get_time

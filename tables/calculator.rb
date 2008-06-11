@@ -90,7 +90,7 @@ class Calculator
     end
   end
   
-  def Calculator.single
+  def self.single
     @@single ||= Calculator.new
   end
 end
