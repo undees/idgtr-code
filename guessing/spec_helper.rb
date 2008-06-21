@@ -27,7 +27,7 @@ describe 'a saved document', :shared => true do
   end
 end
 
-describe 'a re-opened document', :shared => true do  
+describe 'a reopened document', :shared => true do  
   before do
     @note = Note.open 'SavedNote'
   end

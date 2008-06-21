@@ -19,7 +19,7 @@ end
 # END:saved_note
 
 # START:reopened_note
-describe 'a re-opened document', :shared => true do  
+describe 'a reopened document', :shared => true do  
   before do
     @note = Note.open 'SavedNote'
   end

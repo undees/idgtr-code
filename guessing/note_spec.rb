@@ -69,7 +69,7 @@ end
 
 describe 'A previously saved document' do
   it_should_behave_like 'a saved document'
-  it_should_behave_like 'a re-opened document'
+  it_should_behave_like 'a reopened document'
   
   it 'preserves and encrypts the contents of the file' do
     @note.text.should include('Welcome')

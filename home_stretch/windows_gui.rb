@@ -55,6 +55,7 @@ module WindowsGui
   end
   # END:load_symbols
   
+  # START:api_calls
   def_api 'FindWindow',          ['P', 'P'], 'L'
   def_api 'FindWindowEx',        ['L', 'L', 'P', 'P'], 'L'
   def_api 'SendMessage',         ['L', 'L', 'L', 'P'], 'L', :send_with_buffer
@@ -68,40 +69,48 @@ module WindowsGui
   def_api 'IsWindow',            ['L'], 'L'
   def_api 'IsWindowVisible',     ['L'], 'L'
   def_api 'SetForegroundWindow', ['L'], 'L'
-  
+  # END:api_calls
+
+  # START:constants
+  # Windows messages - general
+  WM_COMMAND = 0x0111 
+  WM_SYSCOMMAND = 0x0112 
+  SC_CLOSE = 0xF060
+
+  # Windows messages - text
   WM_GETTEXT = 0x000D
   EM_GETSEL = 0x00B0
   EM_SETSEL = 0x00B1
     
-  WM_COMMAND = 0x0111 
-  WM_SYSCOMMAND = 0x0112 
-  SC_CLOSE = 0xF060
-  
+  # Commonly-used control IDs
   IDOK = 1
   IDCANCEL = 2
   IDYES = 6
   IDNO = 7
   
+  # Mouse and keyboard flags
   MOUSEEVENTF_LEFTDOWN = 0x0002 
   MOUSEEVENTF_LEFTUP = 0x0004
-  
   KEYEVENTF_KEYDOWN = 0 
   KEYEVENTF_KEYUP = 2 
 
+  # Modifier keys
   VK_SHIFT = 0x10
   VK_CONTROL = 0x11
-  VK_MENU = 0x12
+  VK_MENU = 0x12       # Alt
   
+  # Commonly-used keys
   VK_BACK = 0x08
   VK_TAB = 0x09
   VK_RETURN = 0x0D
   VK_ESCAPE = 0x1B
-  VK_OEM_1 = 0xBA
-  VK_OEM_102 = 0xE2
+  VK_OEM_1 = 0xBA       # semicolon (US)
+  VK_OEM_102 = 0xE2     # backslash (US)
   VK_OEM_PERIOD = 0xBE
   VK_HOME = 0x24 
   VK_END = 0x23
   VK_OEM_COMMA = 0xBC
+  # END:constants
 
   def keystroke(*keys)
     return if keys.empty?
