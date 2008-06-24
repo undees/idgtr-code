@@ -39,7 +39,7 @@ class LockNote < Note
     unlock_password options
     
     if @prompted[:with_error] || options[:cancel_password]
-      @main_window = 0
+      @main_window = Window.new 0
       sleep 1.0
     else
       @main_window = Window.top_level "#{name} - Steganos LockNote"
@@ -101,7 +101,7 @@ class LockNote < Note
   end
 
   def running?
-    @main_window != 0 && is_window(@main_window.handle) != 0
+    @main_window.handle != 0 && is_window(@main_window.handle) != 0
   end
 
   def menu(name, item, wait = false)
