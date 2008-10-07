@@ -16,5 +16,5 @@ tell.application("System Events").
     click_menu_item! "Select All"
     click_menu_item! "Copy"
     key_code! RightArrow
-		click_menu_item! "Paste"
+       click_menu_item! "Paste"
   end

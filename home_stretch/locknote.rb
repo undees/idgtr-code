@@ -19,7 +19,8 @@ class LockNote < Note
   BasePath = "C:\\LockNote"
   WindowsGui.load_symbols "#{BasePath}\\src\\resource.h"
   WindowsGui.load_symbols "#{BasePath}\\src\\atlres.h"
-  ID_HELP_ABOUT = ID_APP_ABOUT
+  ID_HELP_ABOUT = ID_APP_ABOUT  
+  ID_FILE_EXIT = ID_APP_EXIT
   # END:atlres
       
   # START:initialize

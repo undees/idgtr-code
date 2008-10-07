@@ -13,7 +13,7 @@ end
 # START:exit
 class Note
   def exit!
-    @main_window.close
+    close
     
     @prompted = dialog(@@titles[:save]) do |d| #<callout id="co.save_title"/>
       d.click '_No'

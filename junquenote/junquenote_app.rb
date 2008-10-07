@@ -31,8 +31,6 @@ class JunqueNoteApp
       size 400, 300
       box_layout f, :Y_AXIS
       
-      on_window_closing {|event| exit_app}
-      
       menu_bar do
         menu('File') do
           menu_item('Open...') {on_click {open} }

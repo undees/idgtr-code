@@ -31,5 +31,10 @@ class JunqueNote
     @edit_window.clear_text
     @edit_window.type_text message
   end
+  
+  def close
+    menu_bar = JMenuBarOperator.new @main_window
+    menu_bar.push_menu_no_block 'File|Exit', '|'
+  end
 end
 # END:text

@@ -30,5 +30,9 @@ class LockNote
     keystroke VK_BACK
     type_in(message)
   end
+  
+  def close
+    @main_window.close
+  end
 end
 # END:text

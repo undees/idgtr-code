@@ -32,7 +32,7 @@ class Note
   def exit!(with_options = {})
     options = DefaultOptions.merge with_options
     
-    @main_window.close
+    menu 'File', 'Exit'
 
     @prompted[:to_confirm_exit] = dialog(@@titles[:exit]) do |d|
       d.click(options[:save_as] ? '_Yes' : '_No')
