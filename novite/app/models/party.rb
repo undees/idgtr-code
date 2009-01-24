@@ -2,7 +2,8 @@ require 'digest/sha1'
 
 class Party < ActiveRecord::Base
   has_many :guests
-  after_create :assign_permalink
+  validates_presence_of :permalink
+  before_validation_on_create :assign_permalink
   
   def to_param
     permalink
@@ -19,6 +20,6 @@ class Party < ActiveRecord::Base
     
   def assign_permalink
     plaintext = "#{id}-#{Time.now.to_f}-{rand}"
-    update_attribute :permalink, Digest::SHA1.hexdigest(plaintext)
+    self.permalink = Digest::SHA1.hexdigest(plaintext)
   end
 end
