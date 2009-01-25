@@ -1,0 +1,10 @@
+This directory contains the code examples from the "Telling a Good Story" chapter.  Since the release of the book, the RSpec Story Runner has been supplanted by the Cucumber tool.
+
+The Story Runner examples are now in Cucumber format.  You'll find the stories themselves in the "features" directory, with the supporting code in "features/step_definitions" and "features/support."  To run them, do the following:
+
+1) Make sure you're running the latest RSpec (still used for fancy "should" matching), Cucumber, and supporting libraries:
+      sudo gem install cucumber rspec Selenium chronic
+2) Run the features:
+      cucumber -n features
+
+The password example from the chapter was intended just for illustration.  Since there's no point in updating it to run with Cucumber, I've moved it into the "old" directory.
