@@ -34,15 +34,15 @@ class CalculatorTest
     @seconds = number_for value
     @calc.enter_number @seconds
   end
-  
+
   def matrix_setup_add(value)
     @adding = number_for value
-    
+
     @calc.plus
     @calc.enter_number @adding
     @calc.equals
   end
-  
+
   def matrix_test(expected)
     @calc.total_seconds.should == number_for(expected)
   end
@@ -53,7 +53,7 @@ end
 # START:method_missing
 class CalculatorTest
   alias_method :old_method_missing, :method_missing
-  
+
   def method_missing(name, *args)
     case name.to_s
     when /matrix_setup_add_(.+)/
@@ -67,7 +67,7 @@ class CalculatorTest
 end
 # END:method_missing
 
-  
+
 # START:matrix
 class CalculatorTest
   matrix :addition, :to_0,   :to_1,    :to_2, :to_huge
