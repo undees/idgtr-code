@@ -2,7 +2,9 @@ $: << File.join(File.dirname(__FILE__), '../..')
 
 require 'calculator'
 require 'rubygems'
-require 'spec'
+require 'bacon'
+
+Bacon::Counter[:depth] = 1
 
 class CalcWorld
   Constants = {:huge => 2**63 - 2, :huger => 2**63 - 1, :over => 0}
