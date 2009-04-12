@@ -1,51 +1,64 @@
 Given /^a calculator$/ do
   @calc ||= Calculator.single
-  @calc.clear
 end
 
 Given /^the following addition table:$/ do
   |params|
 
-  @cases = []
-
   rows = params.hashes
   header = rows.delete_at(0).keys.sort[1..-1]
 
-  rows.each do |row|
+  @cases = rows.inject([]) do |all, row|
     entries = header.reject {|n| row[n] == '-'}
 
-    entries.each do |name|
-      a      = number_for(name)
+    all + entries.inject([]) do |some, col|
+      a      = number_for(col)
       b      = number_for(row['+'])
-      result = number_for(row[name])
+      result = number_for(row[col])
 
-      @cases << [a, b, result]
+      some << [a, b, result]
     end
   end
 end
 
-When /^I add each pair of numbers$/ do
-  @sums = []
-  @cases.map do |a, b, result|
-    When "I add #{a} seconds and #{b} seconds"
+When /^I start with a time of (\d+):(\d+):(\d+):(\d+)$/ do
+  |days, hours, mins, secs|
+  
+  numbers = [days, hours, mins, secs].map {|s| s.to_i}
+
+  @calc.clear
+  @calc.enter_time *numbers
+end
+
+When /^I add (\d+):(\d+):(\d+):(\d+)$/ do
+  |days, hours, mins, secs|
+  
+  numbers = [days, hours, mins, secs].map {|s| s.to_i}
+  
+  @calc.plus
+  @calc.enter_time *numbers
+  @calc.equals
+end
+
+Then /^each pair of numbers should add to the given value$/ do
+  @cases.each do |a, b, expected|
+    When "I start with a time of 00:00:00:#{a}"
+    When "I add 00:00:00:#{b}"
+    Then "the total number of seconds should be #{expected}"
   end
 end
 
-When /^I add (.+) seconds and (.+) seconds$/ do
-  |a, b|
+Then /^the time should be (\d+):(\d+):(\d+):(\d+)$/ do
+  |days, hours, mins, secs|
+  
+  expected = [days, hours, mins, secs].map {|s| s.to_i}
+  actual = @calc.time
 
-  a, b = [a.to_i, b.to_i]
-
-  @calc.enter_number a
-  @calc.plus
-  @calc.enter_number b
-  @calc.equals
-  result = @calc.total_seconds
-
-  @sums ||= []
-  @sums << [a, b, result]
+  actual.should == expected
 end
 
-Then /^the results should match the table$/ do
-  @sums.should == @cases
+Then /^the total number of seconds should be (\d+)$/ do
+  |secs|
+
+  @calc.total_seconds.should == secs.to_i
 end

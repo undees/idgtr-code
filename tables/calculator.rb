@@ -59,9 +59,10 @@ class Calculator
     numbers = [days, hours, minutes, seconds]
     units = [:days, :hours, :minutes, :seconds]
     skip = true
-    
+
     numbers.each_with_index do |number, index|
-      skip &&= (0 == number)
+      skip &&= (0 == number &&
+                :seconds != units[index])
       
       unless skip
         enter_number(number)
@@ -72,7 +73,7 @@ class Calculator
   
   def time
     result = {}
-    
+
     text = @result.text
     text.scan(/[0-9]+[dhms]/).collect do |part|
       number = part.to_i
