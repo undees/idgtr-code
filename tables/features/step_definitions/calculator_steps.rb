@@ -9,16 +9,17 @@ Given /^the following addition table:$/ do
   @cases = []
 
   rows = params.hashes
-  header = rows.delete_at(0)
-  header.delete '+'
+  header = rows.delete_at(0).keys.sort[1..-1]
 
   rows.each do |row|
-    header.keys.sort.each do |a|
-      b = row['+']
-      result = row[a]
-      next if result == '-'
+    entries = header.reject {|n| row[n] == '-'}
 
-      @cases << [a, b, number_for(result)]
+    entries.each do |name|
+      a      = number_for(name)
+      b      = number_for(row['+'])
+      result = number_for(row[name])
+
+      @cases << [a, b, result]
     end
   end
 end
@@ -33,13 +34,16 @@ end
 When /^I add (.+) seconds and (.+) seconds$/ do
   |a, b|
 
-  @calc.enter_number number_for(a)
+  a, b = [a.to_i, b.to_i]
+
+  @calc.enter_number a
   @calc.plus
-  @calc.enter_number number_for(b)
+  @calc.enter_number b
   @calc.equals
+  result = @calc.total_seconds
 
   @sums ||= []
-  @sums << [a, b, @calc.total_seconds]
+  @sums << [a, b, result]
 end
 
 Then /^the results should match the table$/ do
