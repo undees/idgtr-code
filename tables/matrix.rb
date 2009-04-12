@@ -93,9 +93,7 @@ end
 
 
 # START:calc_off
-class CalculatorOff < Test::Unit::TestCase
-  def test_off
-    Thread.new {sleep 3; Calculator.single.off}
-  end
-end
+Test::Unit::UI::Console::TestRunner.run(CalculatorTest)
+
+Calculator.single.off
 # END:calc_off
