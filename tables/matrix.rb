@@ -4,7 +4,6 @@ require 'rubygems'
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'functional_test_matrix'
-require 'spec'
 
 Test::Unit::TestCase.extend FunctionalTestMatrix
 # END:require_zentest
@@ -44,7 +43,7 @@ class CalculatorTest
   end
 
   def matrix_test(expected)
-    @calc.total_seconds.should == number_for(expected)
+    assert_equal @calc.total_seconds, number_for(expected)
   end
 end
 # END:matrix_methods
