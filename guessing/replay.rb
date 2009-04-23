@@ -1,4 +1,4 @@
-require 'LockNote'
+require 'locknote'
 
 EditControl = LockNote::EditControl
 

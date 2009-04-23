@@ -1,6 +1,5 @@
 require 'windows_gui'
 require 'note'
-require 'ftools'
 require 'set'
 
 
@@ -16,28 +15,28 @@ class LockNote < Note
     :about_menu  => 'About',
     :dialog => 'Steganos LockNote'
   }
-  
+
   BasePath = "C:\\LockNote"
   WindowsGui.load_symbols "#{BasePath}\\src\\resource.h"
   WindowsGui.load_symbols "#{BasePath}\\src\\atlres.h"
   ID_HELP_ABOUT = ID_APP_ABOUT
-      
+
   DefaultOptions = {
     :password => 'password',
     :confirmation => 'password'
   }
-  
+
   EditControl = 'ATL:00434310'
-  
+
   def initialize(name = 'LockNote', with_options = {})
     options = DefaultOptions.merge(with_options)
-    
+
     @prompted = {}
     @path = LockNote.path_to name
-    
+
     system 'start "" "' + @path + '"'
     unlock_password options
-    
+
     if @prompted[:with_error] || options[:cancel_password]
       @main_window = Window.new 0
       sleep 1.0
@@ -49,15 +48,15 @@ class LockNote < Note
     end
   end
   # END:initialize
-  
+
   def select_all
-    keystroke VK_CONTROL, ?A
+    keystroke VK_CONTROL, 'A'.to_byte
   end
-  
+
   def text
     @edit_window.text
   end
-  
+
   def text=(new_text)
     select_all
     delete
@@ -82,21 +81,21 @@ class LockNote < Note
   WholeWord = 0x0410
   ExactCase = 0x0411
   SearchUp  = 0x0420
-  
+
   def find(term, with_options={})
     menu 'Edit', 'Find...'
 
     appeared = dialog('Find') do |d|
       type_in term
-      
+
       d.click WholeWord if with_options[:whole_word]
       d.click ExactCase if with_options[:exact_case]
       d.click SearchUp if :back == with_options[:direction]
-      
+
       d.click IDOK
       d.click IDCANCEL
     end
-    
+
     raise 'Find dialog did not appear' unless appeared
   end
 
@@ -107,15 +106,15 @@ class LockNote < Note
   def menu(name, item, wait = false)
     multiple_words = /[.]/
     single_word = /[ .]/
-    
+
     [multiple_words, single_word].each do |pattern|
       words = item.gsub(pattern, '').split
       const_name = ['ID', name, *words].join('_').upcase
-      
+
       begin
         id = LockNote.const_get const_name
         action = wait ? :send_message : :post_message
-        
+
         return send(action, @main_window.handle, WM_COMMAND, id, 0)
       rescue NameError
       end
@@ -133,18 +132,18 @@ private
 
     @prompted[:for_password] = dialog(@@titles[:dialog]) do |d|
       type_in options[:password]
-      
+
       if options[:confirmation]
         keystroke VK_TAB
         type_in options[:confirmation]
       end
-          
+
       d.click options[:cancel_password] ? IDCANCEL : IDOK
     end
   end
 
   ErrorIcon = 0x0014
-  
+
   def watch_for_error
     if @prompted[:for_password]
       @prompted[:with_error] = dialog(@@titles[:dialog]) do |d|
@@ -168,7 +167,7 @@ class LockNote
       menu 'Edit', 'Paste'
       puts 'Pasting from the menu'
     when 1
-      keystroke VK_CONTROL, ?V
+      keystroke VK_CONTROL, 'V'.to_byte
       puts 'Pasting from a keyboard shortcut'
     when 2
       @main_window.click EditControl, :right #<callout id="right_click"/>
@@ -182,7 +181,7 @@ end
 # START:def_action
 class LockNote
   @@default_way = :random
-  
+
   def self.def_action(name, options, way = nil)
     define_method name do
       keys = options.keys.sort {|k| k.to_s}
@@ -195,7 +194,7 @@ class LockNote
       end
 
       action = options[key]
-  
+
       case key
       when :menu
         menu *action
@@ -238,13 +237,13 @@ $logger.formatter = SimpleFormatter.new #<callout id="co.change_formatter"/>
 
 class LockNote
   @@actions = Set.new
-  
+
   def self.def_action(name, options, way = nil)
     @@actions << name
 
     define_method name do
       way ||= @@default_way
-      
+
       keys = options.keys.sort_by {|k| k.to_s}
       key = case way
         when nil;     keys.last
@@ -283,7 +282,7 @@ class LockNote
   # START:paste_action
   def_action :paste,
     :menu => ['Edit', 'Paste', :wait],
-    :keyboard => [VK_CONTROL, ?V],
+    :keyboard => [VK_CONTROL, 'V'.to_byte],
     :context => 'p'
   # END:paste_action
 end
@@ -292,16 +291,16 @@ class LockNote
   # START:actions
   def_action :undo,
     :menu => ['Edit', 'Undo', :wait],
-    :keyboard => [VK_CONTROL, ?Z]
+    :keyboard => [VK_CONTROL, 'Z'.to_byte]
 
   def_action :cut,
     :menu => ['Edit', 'Cut', :wait],
-    :keyboard => [VK_CONTROL, ?X],
+    :keyboard => [VK_CONTROL, 'X',to_byte],
     :context => 't'
 
   def_action :copy,
     :menu => ['Edit', 'Copy', :wait],
-    :keyboard => [VK_CONTROL, ?C],
+    :keyboard => [VK_CONTROL, 'C'.to_byte],
     :context => 'c'
 
   def_action :delete,
@@ -310,7 +309,7 @@ class LockNote
 
   def_action :select_all,
     :menu => ['Edit', 'Select All', :wait],
-    :keyboard => [VK_CONTROL, ?A],
+    :keyboard => [VK_CONTROL, 'A'.to_byte],
     :context => 'a'
   # END:actions
 end
@@ -328,15 +327,15 @@ class LockNote
     action = choices[rand(choices.size)]
     send action
   end
-  
+
   # START:typing_clicking
   def random_typing
     num = 1 + rand(50)
-    random_text = (1..num).collect {rand(26) + ?a}.pack 'c*'
+    random_text = (1..num).collect {rand(26) + 'a'.to_byte}.pack 'c*'
     type_in random_text
     $logger.info "Typing #{random_text}"
   end
-  
+
   def random_clicking
     num = 1 + rand(10)
     num.times do
@@ -347,17 +346,17 @@ class LockNote
       end
     end
   end
-  
+
   @@actions << :random_typing << :random_clicking
   # END:typing_clicking
 
   def random_typing
     num = 1 + rand(50)
-    random_text = (1..num).collect {rand(26) + ?a}.pack 'c*'
+    random_text = (1..num).collect {rand(26) + 'a'.to_byte}.pack 'c*'
     type_in random_text
     $logger.info "type_in '#{random_text}'"
   end
-  
+
   def random_clicking
     num = 1 + rand(10)
     num.times do

@@ -1,27 +1,29 @@
+require 'fileutils'
+
 class Note
-  attr_reader :path  
-  
+  attr_reader :path
+
   @@app = nil
   @@titles = {}
-  
+
   def self.open(*args)
     @@app.new *args
   end
-    
+
   DefaultOptions = {
     :password => 'password',
     :confirmation => 'password'
   }
-  
+
   def exit!(with_options = {})
     options = DefaultOptions.merge with_options
-    
+
     @main_window.close
 
     @prompted[:to_confirm_exit] = dialog(@@titles[:exit]) do |d|
       d.click(options[:save_as] ? '_Yes' : '_No')
     end
-      
+
     if options[:save_as]
       path = @@app.path_to options[:save_as]
       enter_filename path
@@ -47,24 +49,24 @@ class Note
 
   def save_as(name, with_options = {})
     options = DefaultOptions.merge with_options #<callout id="co.merge"/>
-    
+
     @path = @@app.path_to(name)                 #<callout id="co.set_path"/>
-    File.delete @path if File.exists? @path
-    
+    FileUtils.rm @path if File.exists? @path
+
     menu 'File', 'Save As...'                   #<callout id="co.save_msg"/>
 
     enter_filename @path                        #<callout id="co.enter_pair"/>
     assign_password options
   end
-  
+
   def about
     menu 'Help', @@titles[:about_menu]
-    
+
     @prompted[:with_help_text] = dialog(@@titles[:about]) do |d|
       d.click '_OK'
     end
   end
-  
+
   # [:undo, :cut, :copy, :paste, :find_next].each do |method|
   #   item = method.to_s.split('_').collect {|m| m.capitalize}.join(' ')
   #   define_method(method) {menu 'Edit', item, :wait} #<callout id="co.wait_menu"/>
@@ -77,9 +79,9 @@ class Note
   def self.fixture(name)
     source = @@app.path_to(name + 'Fixture')
     target = @@app.path_to(name)
-    
-    File.delete target if File.exists? target
-    File.copy source, target
+
+    FileUtils.rm target if File.exists? target
+    FileUtils.copy source, target
   end
 
 private
@@ -104,7 +106,7 @@ private
 
     enter_password options
     watch_for_error
-    
+
     if @prompted[:with_error]
       enter_password :cancel_password => true #<callout id="co.cancel_pw"/>
     end

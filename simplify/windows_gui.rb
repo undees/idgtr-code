@@ -72,20 +72,24 @@ end
 
 # START:to_keys
 class String
+  def to_byte
+    unpack('C')[0]
+  end
+
   def to_keys
     unless size == 1                 #<callout id="co.size"/>
       raise "conversion is for single characters only"
     end
 
-    ascii = unpack('C')[0]           #<callout id="co.ascii"/>
+    ascii = self.to_byte             #<callout id="co.ascii"/>
 
     case self                        #<callout id="co.keycodes"/>
     when '0'..'9'
-      [ascii - ?0 + 0x30]
+      [ascii - '0'.to_byte + 0x30]
     when 'A'..'Z'
       [WindowsGui.const_get(:VK_SHIFT), ascii]
     when 'a'..'z'
-      [ascii - ?a + ?A]
+      [ascii - 'a'.to_byte + 'A'.to_byte]
     when ' '
       [ascii]
     else
@@ -101,11 +105,14 @@ module WindowsGui
   def keystroke(*keys)
     return if keys.empty?
 
-    keybd_event keys.first, 0, KEYEVENTF_KEYDOWN, 0
+    code = keys.first
+    code = code.to_byte if code.is_a?(String)
+
+    keybd_event code, 0, KEYEVENTF_KEYDOWN, 0
     sleep 0.05
     keystroke *keys[1..-1]
     sleep 0.05
-    keybd_event keys.first, 0, KEYEVENTF_KEYUP, 0
+    keybd_event code, 0, KEYEVENTF_KEYUP, 0
   end
 end
 # END:keystroke
