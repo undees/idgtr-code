@@ -2,6 +2,7 @@
 $LOAD_PATH.push File.dirname(__FILE__)
 
 require 'rubygems'
+require 'selenium'
 require 'spec/expectations'
 require 'chronic'
 

@@ -2,7 +2,7 @@ Story: minimalist invites
   As a host with lots to do
   I want to plan a party with a minimum of mouse clicks
   So that I can get on with the rest of my tasks
-  
+
   Scenario: manual invites
     Given a party called "Celebration"
     And a description of "There's a party goin' on"

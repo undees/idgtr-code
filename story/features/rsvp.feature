@@ -4,7 +4,7 @@ Story: minimalist RSVPs
   I want to RSVP to an invite with a minimum of mouse clicks
   So that I can get on with the rest of my tasks
   # END:rsvp_story
-  
+
   # START:email_free
   Scenario: email-free RSVPs
     Given a party called "a disco anniversary"
