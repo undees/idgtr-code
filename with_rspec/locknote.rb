@@ -63,9 +63,9 @@ class Note
     edit = find_window_ex.call @main_window, 0, 'ATL:00434310', nil
 
     buffer = '\0' * 2048 #<callout id="co.buffer"/>
-    send_message.call edit, WM_GETTEXT, buffer.length, buffer
+    length = send_message.call edit, WM_GETTEXT, buffer.length, buffer
     
-    return buffer
+    return length == 0 ? '' : buffer[0..length - 1]
   end
   # END:text
   
