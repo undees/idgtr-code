@@ -2,24 +2,16 @@ require 'swing_gui'
 require 'junquenote_app'
 require 'note'
 
+include_class 'java.util.ResourceBundle'
+
 class JunqueNote < Note
-  ### Locale-specific strings; comment out or add the section for your locale.
+  bundle = ResourceBundle.get_bundle 'JunqueNote'
 
-  ## English:
-  OK     = 'OK'
-  Cancel = 'Cancel'
-  Input  = 'Input'
-  Yes    = 'Yes'
-  No     = 'No'
-
-  ## Deutsch:
-  # OK     = 'OK'
-  # Cancel = 'Abbrechen'
-  # Input  = 'Eingabe'
-  # Yes    = 'Ja'
-  # No     = 'Nein'
-
-  ###
+  OK     = bundle.get_string 'OK'
+  Cancel = bundle.get_string 'Cancel'
+  Input  = bundle.get_string 'Input'
+  Yes    = bundle.get_string 'Yes'
+  No     = bundle.get_string 'No'
 
   @@app = JunqueNote
   @@titles =
