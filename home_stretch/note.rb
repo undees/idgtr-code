@@ -35,7 +35,7 @@ class Note
     menu 'File', 'Exit'
 
     @prompted[:to_confirm_exit] = dialog(@@titles[:exit]) do |d|
-      d.click(options[:save_as] ? '_Yes' : '_No')
+      d.click(options[:save_as] ? @@titles[:yes] : @@titles[:no])
     end
       
     if options[:save_as]

@@ -3,13 +3,33 @@ require 'junquenote_app'
 require 'note'
 
 class JunqueNote < Note
+  ### Locale-specific strings; comment out or add the section for your locale.
+
+  ## English:
+  OK     = 'OK'
+  Cancel = 'Cancel'
+  Input  = 'Input'
+  Yes    = 'Yes'
+  No     = 'No'
+
+  ## Deutsch:
+  # OK     = 'OK'
+  # Cancel = 'Abbrechen'
+  # Input  = 'Eingabe'
+  # Yes    = 'Ja'
+  # No     = 'Nein'
+
+  ###
+
   @@app = JunqueNote
   @@titles =
   {
     :file => "Input",
     :exit  => "Quittin' time",
     :about => "About JunqueNote",    
-    :about_menu  => "About JunqueNote..."
+    :about_menu  => "About JunqueNote...",
+    :yes => Yes,
+    :no => No,
   }
   
   include SwingGui
@@ -76,9 +96,9 @@ class JunqueNote < Note
 
     menu 'Edit', command
 
-    dialog('Input') do |d|
+    dialog(Input) do |d|
       d.type_in term
-      d.click 'OK'
+      d.click OK
     end
   end
   # END:find_dialog
@@ -124,9 +144,9 @@ private
   end
 
   def single_password_entry(password, cancel)
-    dialog('Input') do |d|
+    dialog(Input) do |d|
       d.type_in password
-      d.click(cancel ? 'Cancel' : 'OK')
+      d.click(cancel ? Cancel : OK)
     end
   end
   # END:enter_password
@@ -135,7 +155,7 @@ private
   def watch_for_error
     if @prompted[:for_password]
       @prompted[:with_error] = dialog('Oops') do |d|
-        d.click 'OK'
+        d.click OK
       end
     end
   end

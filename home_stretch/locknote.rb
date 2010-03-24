@@ -12,7 +12,9 @@ class LockNote < Note
     :exit  => 'Steganos LockNote',
     :about => 'About Steganos LockNote...',
     :about_menu  => 'About',
-    :dialog => 'Steganos LockNote'
+    :dialog => 'Steganos LockNote',
+    :yes => '_Yes',
+    :no => '_No',
   }
   
   # START:atlres
