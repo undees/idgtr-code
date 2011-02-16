@@ -11,6 +11,7 @@ end
 
 
 # START:initialize
+require 'timeout'
 require 'Win32API' #<callout id="co.require_win32api"/>
 
 def user32(name, param_types, return_value) #<callout id="co.user32">
