@@ -1,9 +1,14 @@
+# START:calc_off
+at_exit {Calculator.single.off}
+# END:calc_off
+
 require 'rubygems'
 
 # START:require_zentest
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
 require 'functional_test_matrix'
+require 'rspec/expectations'
 
 Test::Unit::TestCase.extend FunctionalTestMatrix
 # END:require_zentest
@@ -43,7 +48,7 @@ class CalculatorTest
   end
 
   def matrix_test(expected)
-    assert_equal @calc.total_seconds, number_for(expected)
+    @calc.total_seconds.should == number_for(expected)
   end
 end
 # END:matrix_methods
@@ -89,10 +94,3 @@ class CalculatorTest
   action :add_huge,  :huge,  :huge_1,  :over, :over
 end
 # END:horror_vacui
-
-
-# START:calc_off
-Test::Unit::UI::Console::TestRunner.run(CalculatorTest)
-
-Calculator.single.off
-# END:calc_off

@@ -1,7 +1,7 @@
 fixture.days  = 1
 fixture.hours = 47
-fixture.mins = 59
-fixture.secs = 59 #<callout id="co.secs_writer"/>
+fixture.mins  = 59
+fixture.secs  = 59 #<callout id="co.secs_writer"/>
 
 passed = (fixture.days == 2)
 passed &&= (fixture.hours == 23)

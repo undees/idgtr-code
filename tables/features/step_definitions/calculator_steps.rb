@@ -23,7 +23,7 @@ end
 
 When /^I start with a time of (\d+):(\d+):(\d+):(\d+)$/ do
   |days, hours, mins, secs|
-  
+
   numbers = [days, hours, mins, secs].map {|s| s.to_i}
 
   @calc.clear
@@ -32,9 +32,9 @@ end
 
 When /^I add (\d+):(\d+):(\d+):(\d+)$/ do
   |days, hours, mins, secs|
-  
+
   numbers = [days, hours, mins, secs].map {|s| s.to_i}
-  
+
   @calc.plus
   @calc.enter_time *numbers
   @calc.equals
@@ -42,15 +42,15 @@ end
 
 Then /^each pair of numbers should add to the given value$/ do
   @cases.each do |a, b, expected|
-    When "I start with a time of 00:00:00:#{a}"
-    When "I add 00:00:00:#{b}"
-    Then "the total number of seconds should be #{expected}"
+    step "I start with a time of 00:00:00:#{a}"
+    step "I add 00:00:00:#{b}"
+    step "the total number of seconds should be #{expected}"
   end
 end
 
 Then /^the time should be (\d+):(\d+):(\d+):(\d+)$/ do
   |days, hours, mins, secs|
-  
+
   expected = [days, hours, mins, secs].map {|s| s.to_i}
   actual = @calc.time
 
