@@ -1,8 +1,17 @@
 <h1>New party</h1>
 
-<%= error_messages_for :party %>
+<% if @party.errors.any? %>
+  <div id="error_explanation">
+    <h2><%= pluralize(@party.errors.count, "error") %> prohibited this foo from being saved:</h2>
+    <ul>
+      <% @party.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-<% form_for(@party) do |f| %>
+<%= form_for(@party) do |f| %>
   <p>
     <h3>What:</h3>
     <%= f.text_field :name %>

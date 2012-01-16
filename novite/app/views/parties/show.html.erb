@@ -1,3 +1,5 @@
+<p id="party_notice"><%= notice %></p>
+
 <h1>Invitation to <%=h @party.name %></h1>
 
 <p>
@@ -11,7 +13,7 @@
   There are many parties, but only this one lives at:
   <br /><%= link_to party_url(@party), {}, :id => 'party_link' %>
 </p>
-     
+
 <h2>Details</h2>
 
 <p>
@@ -26,7 +28,7 @@
 
 <p>
   <b>Who:</b>
-  <% form_for :guest, :url => guests_url do |f| %>
+  <%= form_for :guest, :url => guests_url do |f| %>
     <%= f.hidden_field :party_permalink, :value => @party.permalink %>
     <%= f.text_field :name %>
     <%= f.check_box :attending, :checked => true %>

@@ -1,14 +1,13 @@
 class PartiesController < ApplicationController
   # GET /parties
   def index
-    redirect_to new_party_url
+    redirect_to new_party_path
   end
-  
+
   # GET /parties/1
-  # GET /parties/1.xml
   def show
     @party = Party.find_by_permalink(params[:id])
-    
+
     guest_name = params[:accept] || params[:decline]
     if guest_name
       guest = Guest.new \
@@ -20,50 +19,36 @@ class PartiesController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @party }
       format.text do
-        email = PartyMailer.create_invite @party, params[:email]
+        email = PartyMailer.invite @party, params[:email]
         render :text => email.encoded
       end
     end
   end
 
   # GET /parties/new
-  # GET /parties/new.xml
   def new
     @party = Party.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.xml  { render :xml => @party }
-    end
   end
 
   # POST /parties
-  # POST /parties.xml
   def create
     @party = Party.new(params[:party])
 
-    respond_to do |format|
-      if @party.save
-        recipients = params[:recipients]
-        
-        if !recipients || recipients.empty?
-          flash[:notice] = 'Paste the text below into your e-mail program.'
-        else
-          recipients.split(',').each do |address|
-            email = PartyMailer.deliver_invite @party, address
-          end
+    if @party.save
+      recipients = params[:recipients]
 
-          flash[:notice] = "Invitations successfully sent to #{recipients}."
-        end
-        
-        format.html { redirect_to(@party) }
-        format.xml  { render :xml => @party, :status => :created, :location => @party }
+      if !recipients || recipients.empty?
+        redirect_to @party, :notice => "Paste the text below into your e-mail program."
       else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @party.errors, :status => :unprocessable_entity }
+        recipients.split(',').each do |address|
+          email = PartyMailer.invite(@party, address.strip).deliver
+        end
+
+        redirect_to @party, :notice => "Invitations successfully sent to #{recipients}."
       end
+    else
+      render :action => 'new'
     end
   end
 end
