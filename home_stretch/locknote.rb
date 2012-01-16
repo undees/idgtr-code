@@ -86,21 +86,16 @@ class LockNote < Note
   WholeWord = 0x0410
   ExactCase = 0x0411
   SearchUp  = 0x0420
-  
   def find(term, with_options={})
     menu 'Edit', 'Find...'
-
     appeared = dialog('Find') do |d|
       type_in term
-      
       d.click WholeWord if with_options[:whole_word]
       d.click ExactCase if with_options[:exact_case]
       d.click SearchUp if :back == with_options[:direction]
-      
       d.click IDOK
       d.click IDCANCEL
     end
-    
     raise 'Find dialog did not appear' unless appeared
   end
   # END:find_dialog
@@ -115,7 +110,6 @@ class LockNote < Note
   def menu(name, item, wait = false)
     multiple_words = /[.]/
     single_word = /[ .]/
-    
     [multiple_words, single_word].each do |pattern|
       words = item.gsub(pattern, '').split
       const_name = ['ID', name, *words].join('_').upcase
@@ -162,7 +156,6 @@ private
   
   # START:watch_for_error
   ErrorIcon = 0x0014
-  
   def watch_for_error
     if @prompted[:for_password]
       @prompted[:with_error] = dialog(@@titles[:dialog]) do |d|

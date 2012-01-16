@@ -12,11 +12,9 @@ require 'Win32API'
 
 module WindowsGui
   def self.def_api(function, parameters, return_value)              #<callout id="co.def_api"/>
-    api   = Win32API.new 'user32', function, parameters, return_value
-    arity = parameters.size
+    api = Win32API.new 'user32', function, parameters, return_value
 
     define_method(function.snake_case) do |*args|                   #<callout id="co.define_method"/>
-      raise ArgumentError unless args.size == arity
       api.call *args                                                #<callout id="co.expand"/>
     end
   end
@@ -132,6 +130,8 @@ end
 
 
 # START:window
+require 'timeout'
+
 module WindowsGui
   class Window
     include WindowsGui #<callout id="co.nested"/>

@@ -295,7 +295,7 @@ class LockNote
 
   def_action :cut,
     :menu => ['Edit', 'Cut', :wait],
-    :keyboard => [VK_CONTROL, 'X',to_byte],
+    :keyboard => [VK_CONTROL, 'X'.to_byte],
     :context => 't'
 
   def_action :copy,

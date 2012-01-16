@@ -159,13 +159,11 @@ describe 'The Find window' do
     @note.find_next
     @note.selection.begin.should == @second_match
   end
-
   it 'supports searching backward' do
     @note.go_to :end
     @note.find @term, :direction => :back
     @note.selection.begin.should == @reverse_match
   end
-
   it 'can restrict its search to whole words' do
     pending 'on hold' do #<callout id="co.pending"/>
       @note.go_to :beginning
@@ -173,7 +171,6 @@ describe 'The Find window' do
       @note.selection.begin.should == @word_match
     end
   end
-
   it 'can restrict its search to exact case matches' do
     @note.go_to :beginning
     @note.find @term, :exact_case => true

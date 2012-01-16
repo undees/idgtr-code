@@ -6,35 +6,38 @@ class TextNote < Note
   include AppleScript
 
   @@app = TextNote
-  
+
   def initialize(name = 'Untitled', with_options = {})
     tell.application('TextEdit').activate!
+    tell.application('TextEdit').make_new_document!
   end
 
-  DontSave = 2
+  DontSave = 3
 
   def exit!
-    menu 'TextEdit', 'Quit TextEdit'
-    
+    menu 'File', 'Close'
+    sleep 1
     tell.
       application('System Events').
       process('TextEdit').
       window('Untitled').
       sheet(1).
       click_button!(DontSave) #<callout id="co.click_button_2"/>
+
+    menu 'TextEdit', 'Quit TextEdit'
   end
 
   def running?
     tell.
       application('System Events').
-      process!('TextEdit') == 'TextEdit' #<callout id="co.textnote_running"/>
+      process!('TextEdit').include?('TextEdit') #<callout id="co.textnote_running"/>
   end
 end
 # END:textnote
 
 
 # START:text
-class TextNote  
+class TextNote
   def text
     tell.
       application('System Events').
@@ -44,10 +47,8 @@ class TextNote
       text_area(1).
       get_value!
   end
-  
   def text=(new_text)
     select_all
-    
     tell.application('System Events').
       process('TextEdit').
       window('Untitled') do
@@ -68,9 +69,7 @@ class TextNote
       menu(name).
       click_menu_item! item
   end
-  
   def undo; menu('Edit', 1) end #<callout id="co.textnote_undo"/>
-
   def select_all; menu('Edit', 'Select All') end
   def cut; menu('Edit', 'Cut') end
   def copy; menu('Edit', 'Copy') end

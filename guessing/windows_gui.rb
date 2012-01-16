@@ -19,7 +19,7 @@ class String
 
     case self
       when '0'..'9'
-        [code - '0',to_byte + 0x30]
+        [code - '0'.to_byte + 0x30]
       when 'A'..'Z'
         [WindowsGui.const_get(:VK_SHIFT), code]
       when 'a'..'z'

@@ -1,3 +1,4 @@
+require 'timeout'
 require 'Win32API'
 
 class String

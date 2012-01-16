@@ -31,13 +31,10 @@ class Note
   # START:exit
   def exit!(with_options = {})
     options = DefaultOptions.merge with_options
-
     menu 'File', 'Exit'
-
     @prompted[:to_confirm_exit] = dialog(@@titles[:exit]) do |d|
       d.click(options[:save_as] ? @@titles[:yes] : @@titles[:no])
     end
-
     if options[:save_as]
       path = @@app.path_to options[:save_as]
       enter_filename path
@@ -89,7 +86,7 @@ private
 
   # START:enter_filename
   def enter_filename(path, approval = '_Save')
-    dialog(@@titles[:file]) do |d| #<callout id="co.open"/>
+    dialog(@@titles[:file]) do |d|
       d.type_in path
       d.click approval
     end

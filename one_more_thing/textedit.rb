@@ -4,6 +4,7 @@ require 'appscript'
 include Appscript
 
 app("TextEdit").activate
+app("TextEdit").make(:new => :document)
 
 events = app("System Events")
 events.keystroke "H"

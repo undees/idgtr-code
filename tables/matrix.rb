@@ -16,10 +16,9 @@ Test::Unit::TestCase.extend FunctionalTestMatrix
 
 # START:test_class
 require 'calculator'
-
 class CalculatorTest < Test::Unit::TestCase
   def setup
-    @calc ||= Calculator.single #<callout id="co.calc_single"/>
+    @calc = Calculator.single #<callout id="co.calc_single"/>
     @calc.clear
   end
 end
@@ -33,20 +32,16 @@ class CalculatorTest
   def number_for(value) #<callout id="co.number_for"/>
     Constants[value.to_s.intern] || value.to_s.to_i
   end
-
   def matrix_init_addition(_, value)
     @seconds = number_for value
     @calc.enter_number @seconds
   end
-
   def matrix_setup_add(value)
     @adding = number_for value
-
     @calc.plus
     @calc.enter_number @adding
     @calc.equals
   end
-
   def matrix_test(expected)
     @calc.total_seconds.should == number_for(expected)
   end

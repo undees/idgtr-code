@@ -2,11 +2,11 @@ require 'java'
 require 'jemmy.jar'
 require 'junquenote_app'
 
-include_class 'org.netbeans.jemmy.JemmyProperties'
-include_class 'org.netbeans.jemmy.TestOut'
+java_import 'org.netbeans.jemmy.JemmyProperties'
+java_import 'org.netbeans.jemmy.TestOut'
 
 %w(Frame TextArea MenuBar Dialog Button).each do |o|
-  include_class "org.netbeans.jemmy.operators.J#{o}Operator"
+  java_import "org.netbeans.jemmy.operators.J#{o}Operator"
 end
 
 JemmyProperties.set_current_timeout 'DialogWaiter.WaitDialogTimeout', 3000
@@ -17,7 +17,7 @@ main_window = JFrameOperator.new 'JunqueNote'
 menu = JMenuBarOperator.new main_window
 
 # START:bundle
-include_class 'org.netbeans.jemmy.Bundle'
+java_import 'org.netbeans.jemmy.Bundle'
 
 bundle = Bundle.new
 bundle.load_from_file 'english.txt'

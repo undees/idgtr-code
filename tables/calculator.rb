@@ -16,7 +16,7 @@ JemmyProperties.set_current_output TestOut.get_null_output
 class Calculator
   def initialize
     TimeCalcApp.main nil
-    
+
     @main_window = FrameOperator.new 'Time Calc'
     @result = LabelOperator.new @main_window
 
@@ -31,30 +31,30 @@ class Calculator
       @buttons[k] = ButtonOperator.new @main_window, k.to_s.capitalize
     end
   end
-  
+
   def clear
     @buttons['C'].push
   end
-  
+
   def plus
     @buttons['+'].push
   end
-  
+
   def equals
     @buttons['='].push
     sleep 0.5
   end
-  
+
   def off
     @buttons[:off].push
   end
-  
+
   def enter_number(number)
     number.to_i.to_s.split(//).each do |n|
       @buttons[n.to_i].push
     end
   end
-  
+
   def enter_time(days, hours, minutes, seconds)
     numbers = [days, hours, minutes, seconds]
     units = [:days, :hours, :minutes, :seconds]
@@ -63,14 +63,14 @@ class Calculator
     numbers.each_with_index do |number, index|
       skip &&= (0 == number &&
                 :seconds != units[index])
-      
+
       unless skip
         enter_number(number)
         @buttons[units[index]].push
       end
     end
   end
-  
+
   def time
     result = {}
 
@@ -80,17 +80,17 @@ class Calculator
       units = part[-1..-1]
       result[units] = number
     end
-    
+
     ['d', 'h', 'm', 's'].map {|u| result[u] || 0}
   end
-  
+
   def total_seconds
     multipliers = [86400, 3600, 60, 1]
     time.zip(multipliers).inject(0) do |total, part|
       total + part[0] * part[1]
     end
   end
-  
+
   def self.single
     @@single ||= Calculator.new
   end

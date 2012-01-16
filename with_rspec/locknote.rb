@@ -10,7 +10,6 @@ end
 # END:empty
 
 
-# START:initialize
 require 'timeout'
 require 'Win32API' #<callout id="co.require_win32api"/>
 
@@ -18,15 +17,15 @@ def user32(name, param_types, return_value) #<callout id="co.user32">
   Win32API.new 'user32', name, param_types, return_value
 end
 
-KEYEVENTF_KEYDOWN = 0 
-KEYEVENTF_KEYUP = 2 
+KEYEVENTF_KEYDOWN = 0
+KEYEVENTF_KEYUP = 2
 
-WM_SYSCOMMAND = 0x0112 
+WM_SYSCOMMAND = 0x0112
 SC_CLOSE = 0xF060
 
 IDNO = 7
 
-MOUSEEVENTF_LEFTDOWN = 0x0002 
+MOUSEEVENTF_LEFTDOWN = 0x0002
 MOUSEEVENTF_LEFTUP = 0x0004
 
 WM_GETTEXT = 0x000D
@@ -43,20 +42,20 @@ class Note
 
     puts "The main window's handle is #{@main_window}."
   end
-  
+
   def type_in(message)
     keybd_event = user32 'keybd_event', ['I', 'I', 'L', 'L'], 'V'
 
     message.upcase.each_byte do |b| #<callout id="co.upcase"/>
-      keybd_event.call b, 0, KEYEVENTF_KEYDOWN, 0 
-      sleep 0.05 
-      keybd_event.call b, 0, KEYEVENTF_KEYUP, 0 
-      sleep 0.05 
+      keybd_event.call b, 0, KEYEVENTF_KEYDOWN, 0
+      sleep 0.05
+      keybd_event.call b, 0, KEYEVENTF_KEYUP, 0
+      sleep 0.05
     end
   end
 
   # START:text
-  def text    
+  def text
     find_window_ex = user32 'FindWindowEx', ['L', 'L', 'P', 'P'], 'L'
 
     send_message = user32 'SendMessage', ['L', 'L', 'L', 'P'], 'L'
@@ -65,55 +64,55 @@ class Note
 
     buffer = '\0' * 2048 #<callout id="co.buffer"/>
     length = send_message.call edit, WM_GETTEXT, buffer.length, buffer
-    
+
     return length == 0 ? '' : buffer[0..length - 1]
   end
   # END:text
-  
+
   def exit!
     begin
       find_window = user32 'FindWindow', ['P', 'P'], 'L'
 
       post_message = user32 'PostMessage', ['L', 'L', 'L', 'L'], 'L'
 
-      post_message.call @main_window, WM_SYSCOMMAND, SC_CLOSE, 0 
+      post_message.call @main_window, WM_SYSCOMMAND, SC_CLOSE, 0
 
       # You might need a slight delay here.
       sleep 0.5
 
-      get_dlg_item = user32 'GetDlgItem', ['L', 'L'], 'L' 
+      get_dlg_item = user32 'GetDlgItem', ['L', 'L'], 'L'
 
       dialog = timeout(3) do
         sleep 0.2 while (h = find_window.call \
           nil, 'Steganos LockNote') <= 0; h
       end
 
-      button = get_dlg_item.call dialog, IDNO 
+      button = get_dlg_item.call dialog, IDNO
 
-      get_window_rect = user32 'GetWindowRect', ['L', 'P'], 'I' 
+      get_window_rect = user32 'GetWindowRect', ['L', 'P'], 'I'
 
       rectangle = [0, 0, 0, 0].pack 'LLLL'
-      get_window_rect.call button, rectangle 
+      get_window_rect.call button, rectangle
       left, top, right, bottom = rectangle.unpack 'LLLL'
 
       puts "The No button is #{right - left} pixels wide."
 
-      set_cursor_pos = user32 'SetCursorPos', ['L', 'L'], 'I' 
+      set_cursor_pos = user32 'SetCursorPos', ['L', 'L'], 'I'
 
-      mouse_event = user32 'mouse_event', ['L', 'L', 'L', 'L', 'L'], 'V' 
+      mouse_event = user32 'mouse_event', ['L', 'L', 'L', 'L', 'L'], 'V'
 
       center = [(left + right) / 2, (top + bottom) / 2]
 
       set_cursor_pos.call *center #<callout id="co.args"/>
 
-      mouse_event.call MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0 
+      mouse_event.call MOUSEEVENTF_LEFTDOWN, 0, 0, 0, 0
       mouse_event.call MOUSEEVENTF_LEFTUP, 0, 0, 0, 0
-      
+
       @prompted = true
     rescue TimeoutError
     end
   end
-  
+
   # START:prompted
   def has_prompted?
     @prompted

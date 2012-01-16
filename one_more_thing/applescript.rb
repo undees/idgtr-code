@@ -5,20 +5,18 @@ module AppleScript
       @lines = []
       @tells = 0
     end
-
+	
     def method_missing(name, *args, &block)
       immediate = name.to_s.include? '!' #<callout id="co.apple_preprocess"/>
       param = args.shift
       script = name.to_s.chomp('!').gsub('_', ' ')
       script += %Q( #{param.inspect}) if param
-      
+
       unless immediate #<callout id="co.apple_immediate"/>
         script = 'tell ' + script
         @tells += 1
       end
-      
       @lines << script
-      
       if block_given? #<callout id="co.apple_decide"/>
         @has_block = true
         instance_eval &block
@@ -41,9 +39,7 @@ module AppleScript
       clauses = @lines.map do |line|
         '-e "' + line.gsub('"', '\"') + '"'
       end.join(' ') + ' '
-      
       clauses += '-e "end tell" ' * @tells
-      
       `osascript #{clauses}`.chomp("\n")
     end
   end

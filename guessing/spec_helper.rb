@@ -1,16 +1,17 @@
 # START:random_helper
 require 'rubygems'
+require 'hpricot'
 require 'open-uri'
 
 module RandomHelper
   def random_paragraph
-    html = open('http://www.lipsum.com/feed/html?amount=1').read
-    Regexp.new("<p>\n(.+)\n</p>").match(html)[1] #<callout id="co.xpath"/>
+    doc = Hpricot open('http://www.lipsum.com/feed/html?amount=1')
+    (doc/"div#lipsum p").inner_html.strip #<callout id="co.xpath"/>
   end
 end
 # END:random_helper
 
-describe 'a new document', :shared => true do
+shared_context 'a new document' do
   before do
     @note = Note.open
   end
@@ -20,13 +21,13 @@ describe 'a new document', :shared => true do
   end
 end
 
-describe 'a saved document', :shared => true do
+shared_context 'a saved document' do
   before do
     Note.fixture 'SavedNote'
   end
 end
 
-describe 'a reopened document', :shared => true do
+shared_context 'a reopened document' do
   before do
     @note = Note.open 'SavedNote'
   end
@@ -37,25 +38,25 @@ describe 'a reopened document', :shared => true do
 end
 
 # START:random_find
-describe 'a searchable document', :shared => true do
+shared_context 'a searchable document' do
   include RandomHelper #<callout id="co.include_random"/>
 
   before do
-    @example = random_paragraph #<callout id="co.use_random"/>
+    @paragraph = random_paragraph #<callout id="co.use_random"/>
 
-    words = @example.split /[^A-Za-z]+/
+    words = @paragraph.split /[^A-Za-z]+/
     last_cap = words.select {|w| w =~ /^[A-Z]/}.last
     @term = last_cap[0..1] #<callout id="co.last_cap"/>
 
-    @first_match = @example.index(/#{@term}/i)
+    @first_match = @paragraph.index(/#{@term}/i)
     @second_match = @first_match ?
-      @example.index(/#{@term}/i, @first_match + 1) :
+      @paragraph.index(/#{@term}/i, @first_match + 1) :
       nil
-    @reverse_match = @example.rindex(/#{@term}/i)
-    @word_match = @example.index(/#{@term}\b/i)
-    @case_match = @example.index(/#{@term}/)
+    @reverse_match = @paragraph.rindex(/#{@term}/i)
+    @word_match = @paragraph.index(/#{@term}\b/i)
+    @case_match = @paragraph.index(/#{@term}/)
 
-    @note.text = @example
+    @note.text = @paragraph
   end
 end
 # END:random_find

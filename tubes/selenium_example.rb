@@ -46,13 +46,10 @@ browser.wait_for_page_to_load 5000
 # END:details
 
 
-# The next part will fail unless we change
-# the browser type above to '*chrome'.
-
 # START:purchase
 browser.click '//button[@class="add-to-cart"]'
 browser.wait_for_page_to_load 5000
 
-browser.open 'https://secure.pragprog.com/login'
+browser.click '//button[@id="check-out-button"]' # redirects to https
 browser.wait_for_page_to_load 5000
 # END:purchase

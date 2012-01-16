@@ -10,7 +10,7 @@ find_window = user32 'FindWindow', ['P', 'P'], 'L'
 system 'start "" "C:/LockNote/LockNote.exe"'
 
 sleep 0.2 while (main_window = find_window.call \
-  nil, 'LockNote - Steganos LockNote') <= 0  #<callout id="co.variable"/>
+                 nil, 'LockNote - Steganos LockNote') <= 0  #<callout id="co.variable"/>
 
 puts "The main window's handle is #{main_window}."
 # END:launch
@@ -53,9 +53,9 @@ require 'timeout'
 
 get_dlg_item = user32 'GetDlgItem', ['L', 'L'], 'L'
 
-dialog = timeout(3) do                    #<callout id="co.timeout"/>
+dialog = timeout(3) do                               #<callout id="co.timeout"/>
   sleep 0.2 while (h = find_window.call \
-    nil, 'Steganos LockNote') <= 0; h #<callout id="co.dry"/>
+                   nil, 'Steganos LockNote') <= 0; h #<callout id="co.dry"/>
 end
 
 IDNO = 7

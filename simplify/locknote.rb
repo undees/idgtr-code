@@ -1,7 +1,6 @@
 # START:locknote
 require 'windows_gui'
 require 'note'
-
 class LockNote < Note
   include WindowsGui
 

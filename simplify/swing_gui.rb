@@ -24,12 +24,10 @@ module SwingGui
   def dialog(title, seconds=3)
     JemmyProperties.set_current_timeout \
       'DialogWaiter.WaitDialogTimeout', seconds * 1000
-    
     begin
       d = JDialogOperator.new title
       yield d #<callout id="co.yield_dialog"/>
       d.wait_closed
-      
       true
     rescue NativeException
     end

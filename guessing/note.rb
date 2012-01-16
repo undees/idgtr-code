@@ -87,7 +87,7 @@ class Note
 private
 
   def enter_filename(path)
-    dialog(@@titles[:file]) do |d| #<callout id="co.open"/>
+    dialog(@@titles[:file]) do |d|
       d.type_in path
       d.click '_Save'
     end

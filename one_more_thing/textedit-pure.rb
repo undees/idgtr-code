@@ -5,6 +5,7 @@ include AppleScript
 RightArrow = 124
 
 tell.application("TextEdit").activate! #<callout id="co.apple_bang"/>
+tell.application("TextEdit").make_new_document!
 
 tell.application("System Events").
   process("TextEdit").

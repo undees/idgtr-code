@@ -22,7 +22,6 @@ class JunqueNote < Note
 
     @prompted = {}
     @path = JunqueNote.path_to(name) if name
-
     @program = JunqueNoteApp.new
     @main_window = JFrameOperator.new 'JunqueNote'
     @edit_window = JTextAreaOperator.new @main_window
