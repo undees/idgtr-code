@@ -1,9 +1,9 @@
-# START:rsvp_story
-Story: minimalist RSVPs
+# START:rsvp_feature
+Feature: minimalist RSVPs
+  So that I can attend tons of parties
   As a guest with lots to do
   I want to RSVP to an invite with a minimum of mouse clicks
-  So that I can get on with the rest of my tasks
-  # END:rsvp_story
+  # END:rsvp_feature
 
   # START:email_free
   Scenario: email-free RSVPs

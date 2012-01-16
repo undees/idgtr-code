@@ -2,26 +2,31 @@
 require 'rubygems'
 require 'selenium'
 require 'time'
+
 class Party
   def initialize(browser)
     @browser = browser
     @browser.open '/parties/new'
   end
+
   def self.def_setting(setting, type = :read_write)
     if type == :readable || type == :read_write
       define_method(setting) do
         @browser.get_text("id=party_#{setting}")
       end
+      
       define_method("has_#{setting}?") do
         send(setting) rescue nil
       end
     end
+    
     if type == :writable || type == :read_write
       define_method("#{setting}=") do |value|
         @browser.type "id=party_#{setting}", value
       end
     end
   end
+
   def_setting :name
   def_setting :description
   def_setting :location
@@ -33,13 +38,15 @@ end
 
 
 # START:party_set_time
-class Party
+class Party  
   def begins_at=(time); set_time(:begin, time) end
   def ends_at=  (time); set_time(:end, time) end
+
   def set_time(event, time)
     ['%Y', '%B', '%d', '%H', '%M'].each_with_index do |part, index|
       element = "id=party_#{event}s_at_#{index + 1}i"
       value = time.strftime part
+      
       @browser.select element, value
     end
   end
@@ -48,21 +55,22 @@ end
 
 
 # START:party_get_time
-class Party
+class Party  
   def begins_at; get_times.first end
-  def ends_at;   get_times.last  end
+  def ends_at; get_times.last end
+
   def get_times
     begins_on = @browser.get_text 'party_begins_on'
     begins_at = @browser.get_text 'party_begins_at'
-    ends_at   = @browser.get_text 'party_ends_at'
-
+    ends_at = @browser.get_text 'party_ends_at'
+    
     begins = Time.parse(begins_on + ' ' + begins_at)
     ends = Time.parse(begins_on + ' ' + ends_at)
     ends += 86400 if ends < begins
-
+    
     [begins, ends]
   end
-
+  
   def has_times?
     get_times rescue nil
   end
@@ -73,7 +81,7 @@ end
 # START:party_save
 class Party
   def save_and_view
-    @browser.click 'name=commit'
+    @browser.click 'id=party_submit'
     @browser.wait_for_page_to_load 5000
     @saved = true
   end
@@ -100,6 +108,7 @@ class Party
   def responses(want_attending)
     num_guests = @browser.get_xpath_count(RsvpItem).to_i
     return [] unless num_guests >= 1
+
     all = (1..num_guests).map do |i|
       name = @browser.get_text \
         "#{RsvpItem}[#{i}]/span[@class='rsvp_name']"
@@ -107,11 +116,12 @@ class Party
         "#{RsvpItem}[#{i}]/span[@class='rsvp_attending']"
       [name, rsvp]
     end
-
+    
     matching = all.select do |name, rsvp|
       is_attending = !rsvp.include?('not')
       !(want_attending ^ is_attending)
     end
+    
     matching.map {|name, rsvp| name}
   end
 end

@@ -1,4 +1,3 @@
-# START:planning
 Given /^a party called "(.*)"$/ do |name|
   @party = Party.new(browser)
   @party.name = name
@@ -26,4 +25,3 @@ end
 When /^I view the invitation$/ do
   @party.save_and_view
 end
-# END:planning

@@ -1,4 +1,3 @@
-# START:rsvp
 Then /^I should see the party details$/ do
   @party.should have_name
   @party.should have_description
@@ -15,4 +14,3 @@ Then /^I should see "(.*)" in the list of (.*)$/ do |guest, type|
   want_attending = (type == 'partygoers')
   @party.responses(want_attending).should include(guest)
 end
-# END:rsvp

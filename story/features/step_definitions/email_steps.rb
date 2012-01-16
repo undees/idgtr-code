@@ -1,4 +1,3 @@
-# START:email
 Given /^a guest list of "(.*)"$/ do |list|
   @party.recipients = list
 end
@@ -20,4 +19,3 @@ When /^I follow the "(.*)" link$/ do |answer|
   link = %r{#{answer} - (http://.+)}.match(@email)[1]
   @party.rsvp_at link
 end
-# END:email

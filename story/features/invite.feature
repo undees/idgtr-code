@@ -1,7 +1,7 @@
-Story: minimalist invites
+Feature: minimalist invites
+  So that I can get on with ordering snacks
   As a host with lots to do
   I want to plan a party with a minimum of mouse clicks
-  So that I can get on with the rest of my tasks
 
   Scenario: manual invites
     Given a party called "Celebration"
